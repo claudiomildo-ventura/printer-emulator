@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
   StdCtrls, ComCtrls, Sockets, ssockets,fphttpclient,zplview_settings,dateutils,
-  INIFiles,Printers,lazlogger;
+  INIFiles,Printers,lazlogger,DefaultTranslator;
 type
 
   { TForm1 }
@@ -25,6 +25,7 @@ type
     Panel2: TPanel;
     Shape1: TShape;
     StatusBar1: TStatusBar;
+    TBLock: TToggleBox;
     procedure AcceptTimerTimer(Sender: TObject);
     procedure BRenderManualClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -36,6 +37,7 @@ type
     procedure Image1StartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure MenuItem2Click(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
+    procedure MSourceCodeChange(Sender: TObject);
     procedure Panel2Click(Sender: TObject);
     procedure Shape1EndDrag(Sender, Target: TObject; X, Y: Integer);
     procedure Shape1MouseDown(Sender: TObject; Button: TMouseButton;
@@ -44,6 +46,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure Shape1StartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure StatusBar1Click(Sender: TObject);
+    procedure TBLockChange(Sender: TObject);
   private
     socket : TINetServer;
     zpldata : Pointer;
@@ -54,6 +57,7 @@ type
     rulertypes: array of integer; // 0=Vertical, 1=horizonal
     RulersVisible : Boolean;
     settings : ZViewSettings;
+    jobCnt: Integer;
     inifile  : string;
     procedure ReadJetData(Sender: TObject; DataStream: TSocketStream);
     procedure GetLabelaryData;
@@ -108,6 +112,7 @@ begin
   GetMem (zpldata, 1000000);        // 1MB sollte für ZPL reichen ?!?
   FillChar (zpldata^,1000000,0);
   zpldatalen:=0;
+  jobCnt:=0;
 
   inifile:=IniFileName();
   ResetSettings;
@@ -257,6 +262,11 @@ begin
   Form1.Close;
 end;
 
+procedure TForm1.MSourceCodeChange(Sender: TObject);
+begin
+  TBLock.Checked:=(MSourceCode.Lines.Count > 3);
+end;
+
 procedure TForm1.Panel2Click(Sender: TObject);
 begin
   if Panel1.Width<50 then begin
@@ -321,6 +331,11 @@ begin
   end;
   if zpldatalen>0 then GetLabelaryData;
 //  Image1.Picture.Clear;
+end;
+
+procedure TForm1.TBLockChange(Sender: TObject);
+begin
+
 end;
 
 procedure TForm1.AcceptTimerTimer(Sender: TObject);
@@ -420,6 +435,9 @@ var FPHTTPClient: TFPHTTPClient;
     //filename:string;
     errormsg:string;
 begin
+  Image1.Picture.Clear;
+  Image1.Invalidate;
+  Application.ProcessMessages;
   FPHTTPClient := TFPHTTPClient.Create(nil);
   PostData := TMemoryStream.Create;
   PngData := TMemoryStream.Create;
@@ -448,7 +466,8 @@ begin
       if FPHTTPClient.ResponseStatusCode=200 then
       begin
         Image1.Picture.LoadFromStream(PngData);
-        StatusBar1.Panels[0].Text:=DateTimeToStr(Now);
+        inc(jobCnt);
+        StatusBar1.Panels[0].Text:=format('#%d - %s',[jobCnt,DateTimeToStr(Now)]);
         if settings.save then SavePng;
         if settings.print then RePrint;
       end
@@ -476,7 +495,6 @@ procedure TForm1.ReadJetData(Sender: TObject; DataStream: TSocketStream);
 var len: LongInt;
     db:string;
 begin
-  //WriteLn('Accepting client: ', HostAddrToStr(NetToHost(Data.RemoteAddress.sin_addr)));
   zpldatalen:=0;
   repeat
     len := DataStream.Read( (zpldata+zpldatalen)^ , 1000000-zpldatalen);
@@ -486,7 +504,10 @@ begin
   DebugLn(DateTimeToStr(Now));
   DebugLn(db);
   DataStream.Free;
-  if MSourceCode.Text='' then MSourceCode.Text:=db;
+  if not TBLock.Checked then begin
+    MSourceCode.Text:=db;
+    TBLock.Checked:=false;
+  end;
   if settings.saverawdata then SaveRaw(db);
   GetLabelaryData;
 end;

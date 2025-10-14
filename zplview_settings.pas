@@ -5,7 +5,8 @@ unit zplview_settings;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, StdCtrls,Printers;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, StdCtrls,
+  Printers, ExtCtrls;
 
 type
   ZViewSettings = record
@@ -38,6 +39,7 @@ type
     ComPrinter: TComboBox;
     ComRes: TComboBox;
     ComRotate: TComboBox;
+    Edit1: TEdit;
     EdtScript: TEdit;
     EdtPort: TEdit;
     EdtPath: TEdit;
@@ -50,6 +52,8 @@ type
     Label4: TLabel;
     Label5: TLabel;
     Label6: TLabel;
+    Label7: TLabel;
+    RGEngine: TRadioGroup;
     procedure FormShow(Sender: TObject);
   private
 
