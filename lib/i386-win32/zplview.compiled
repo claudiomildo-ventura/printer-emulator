@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Compiler Value="C:\lazarus\fpc\3.2.2\bin\i386-win32\fpc.exe" Date="1533566547"/>
+  <Params Value="-MObjFPC -Scghi -O1 -gw3 -gl -WG -l -vewnhibq -FiD:\dev\workspaces\zpl-viewer\lib\i386-win32 -FuD:\dev\workspaces\zpl-viewer\ -FuC:\lazarus\components\turbopower_ipro\units\i386-win32\win32 -FuC:\lazarus\components\printers\lib\i386-win32\win32 -FuC:\lazarus\components\cairocanvas\lib\i386-win32\win32 -FuC:\lazarus\lcl\units\i386-win32\win32 -FuC:\lazarus\lcl\units\i386-win32 -FuC:\lazarus\components\freetype\lib\i386-win32 -FuC:\lazarus\components\lazutils\lib\i386-win32 -FuC:\lazarus\packager\units\i386-win32 -FUD:\dev\workspaces\zpl-viewer\lib\i386-win32\ -FED:\dev\workspaces\zpl-viewer\ -oD:\dev\workspaces\zpl-viewer\zplview.exe -dLCL -dLCLwin32 zplview.lpr"/>
+</CONFIG>
