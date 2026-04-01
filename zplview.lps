@@ -16,7 +16,6 @@
         <ComponentName Value="FormSettings"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <CursorPos X="3" Y="12"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
@@ -28,24 +27,71 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="442"/>
+        <CursorPos X="93" Y="472"/>
         <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit2>
       <Unit3>
         <Filename Value="zplview_main.lfm"/>
         <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
         <UsageCount Value="20"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit3>
       <Unit4>
         <Filename Value="zplview_settings.lfm"/>
         <IsPartOfProject Value="True"/>
+        <EditorIndex Value="1"/>
         <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit4>
     </Units>
-    <JumpHistory Count="1">
+    <JumpHistory Count="10" HistoryIndex="9">
       <Position1>
-        <Filename Value="zplview_settings.pas"/>
-        <Caret TopLine="82"/>
+        <Filename Value="zplview_main.pas"/>
+        <Caret Line="470" Column="72" TopLine="449"/>
       </Position1>
+      <Position2>
+        <Filename Value="zplview_main.pas"/>
+        <Caret Line="460" TopLine="449"/>
+      </Position2>
+      <Position3>
+        <Filename Value="zplview_main.pas"/>
+        <Caret Line="461" TopLine="449"/>
+      </Position3>
+      <Position4>
+        <Filename Value="zplview_main.pas"/>
+        <Caret Line="463" TopLine="449"/>
+      </Position4>
+      <Position5>
+        <Filename Value="zplview_main.pas"/>
+        <Caret Line="464" TopLine="449"/>
+      </Position5>
+      <Position6>
+        <Filename Value="zplview_main.pas"/>
+        <Caret Line="465" TopLine="449"/>
+      </Position6>
+      <Position7>
+        <Filename Value="zplview_main.pas"/>
+        <Caret Line="466" TopLine="449"/>
+      </Position7>
+      <Position8>
+        <Filename Value="zplview_main.pas"/>
+        <Caret Line="475" TopLine="460"/>
+      </Position8>
+      <Position9>
+        <Filename Value="zplview_main.pas"/>
+        <Caret Line="476" TopLine="460"/>
+      </Position9>
+      <Position10>
+        <Filename Value="zplview_main.pas"/>
+        <Caret Line="477" TopLine="460"/>
+      </Position10>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
