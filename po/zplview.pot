@@ -1,0 +1,36 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: tform1.brendermanual.caption
+msgid "Render"
+msgstr ""
+
+#: tform1.caption
+msgid "ZPL-View"
+msgstr ""
+
+#: tform1.menuitem1.caption
+msgid "Datei"
+msgstr ""
+
+#: tform1.menuitem2.caption
+msgctxt "tform1.menuitem2.caption"
+msgid "Einstellungen"
+msgstr ""
+
+#: tform1.menuitem3.caption
+msgid "Ende"
+msgstr ""
+
+#: tform1.statusbar1.panels[1].text
+msgid "0"
+msgstr ""
+
+#: tform1.tblock.caption
+msgid "Locked"
+msgstr ""
+
+#: tform1.tblock.hint
+msgid "Prevent your ZPL code from being overwritten"
+msgstr ""
+
