@@ -1,0 +1,117 @@
+###############################################################################
+# DELPHI - IDE & COMPILER
+###############################################################################
+
+# Compiler‑generated binaries (safe to delete)
+*.exe
+*.dll
+*.bpl
+*.bpi
+*.dcp
+*.so
+*.apk
+*.drc
+*.map
+*.dres
+*.rsm
+*.tds
+*.dcu
+*.lib
+*.a
+*.o
+*.ocx
+
+# Auto‑generated files (duplicate information)
+*.cfg
+*.hpp
+*Resource.rc
+
+# IDE local/user files (should not be committed)
+*.local
+*.identcache
+*.projdata
+*.tvsconfig
+*.dsk
+
+# History and backups
+__history/
+__recovery/
+*.~*
+
+# Castalia statistics (Castalia bundled since XE7)
+*.stat
+
+# Boss package manager
+modules/
+
+###############################################################################
+# DELPHI – OPTIONAL FILES TO IGNORE (uncomment if desired)
+###############################################################################
+
+# Binary resource files
+# *.res
+
+# Type Library (automatically generated in modern Delphi)
+# *.tlb
+
+# Diagram Portfolio (used up to Delphi 7)
+# *.ddp
+
+# Visual LiveBindings files
+# *.vlb
+
+# Deployment Manager configuration (mainly for mobile/remote debug)
+# *.deployproj
+
+# External C/C++ object files (safe to ignore if not using external libs)
+# *.obj
+
+
+###############################################################################
+# LAZARUS / FREE PASCAL
+###############################################################################
+
+# Compiler‑generated binaries
+*.exe
+*.dll
+*.so
+*.dylib
+*.lrs
+*.res
+*.compiled
+*.dbg
+*.ppu
+*.o
+*.or
+*.a
+
+# Automatically generated files
+*.rst
+*.rsj
+*.lrt
+
+# Lazarus user‑specific project session
+*.lps
+
+# Backup and output folders
+backup/
+*.bak
+lib/
+
+
+###############################################################################
+# COMMON SETTINGS
+###############################################################################
+
+# macOS applications
+*.app/
+
+# Common build output directories
+Bin/
+bin/
+Win32/
+Win64/
+Linux64/
+macOS/
+Release/
+Debug/
