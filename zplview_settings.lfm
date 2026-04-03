@@ -6,9 +6,9 @@ object FormSettings: TFormSettings
   Caption = 'Einstellungen'
   ClientHeight = 376
   ClientWidth = 685
-  OnShow = FormShow
   Position = poMainFormCenter
-  LCLVersion = '2.0.6.0'
+  LCLVersion = '4.4.0.0'
+  OnShow = FormShow
   object BitBtn1: TBitBtn
     Left = 16
     Height = 30

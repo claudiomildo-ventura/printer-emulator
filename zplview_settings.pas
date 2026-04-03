@@ -10,19 +10,19 @@ uses
 
 type
   ZViewSettings = record
-    resolution : integer;
-    rotation : integer;
-    width,height: real;
-    save : boolean;
-    savepath:string;
-    print:boolean;
-    printraw:boolean;
-    printer:string;
-    executescript:boolean;
-    scriptpath:string;
-    tcpport:integer;
-    bindadr:string;
-    saverawdata:boolean;
+    resolution: integer;
+    rotation: integer;
+    Width, Height: real;
+    save: boolean;
+    savepath: string;
+    print: boolean;
+    printraw: boolean;
+    printer: string;
+    executescript: boolean;
+    scriptpath: string;
+    tcpport: integer;
+    bindadr: string;
+    saverawdata: boolean;
   end;
 
   { TFormSettings }
@@ -58,8 +58,8 @@ type
   private
 
   public
-    procedure PutSettings(VAR setup:ZViewSettings);
-    procedure GetSettings(VAR setup:ZViewSettings);
+    procedure PutSettings(var setup: ZViewSettings);
+    procedure GetSettings(var setup: ZViewSettings);
   end;
 
 var
@@ -75,44 +75,47 @@ procedure TFormSettings.FormShow(Sender: TObject);
 begin
   ComPrinter.Items.Assign(Printer.Printers);
 end;
-procedure TFormSettings.PutSettings(VAR setup:ZViewSettings);
+
+procedure TFormSettings.PutSettings(var setup: ZViewSettings);
 begin
   ComPrinter.Items.Assign(Printer.Printers);
-  with setup do begin
-    ComRes.Text:= IntToStr(resolution);
-    ComRotate.Text:= IntToStr(rotation);
-    EdtWidth.Text:=FloatToStr(width);
-    EdtHeight.Text:=FloatToStr(height);
-    ChbSave.Checked:= save;
-    EdtPath.Text:=savepath;
-    ChbPrint.Checked:=print;
-    ChbRaw.Checked:=printraw;
-    ComPrinter.ItemIndex:=ComPrinter.Items.IndexOf(printer);
-    ChbScript.Checked:=executescript;
-    ChbSaveRaw.Checked:=saverawdata;
-    EdtScript.Text:=scriptpath;
-    EdtPort.Text:=IntToStr(tcpport);
-    EdtBind.Text:=bindadr;
+  with setup do
+  begin
+    ComRes.Text := IntToStr(resolution);
+    ComRotate.Text := IntToStr(rotation);
+    EdtWidth.Text := FloatToStr(Width);
+    EdtHeight.Text := FloatToStr(Height);
+    ChbSave.Checked := save;
+    EdtPath.Text := savepath;
+    ChbPrint.Checked := print;
+    ChbRaw.Checked := printraw;
+    ComPrinter.ItemIndex := ComPrinter.Items.IndexOf(printer);
+    ChbScript.Checked := executescript;
+    ChbSaveRaw.Checked := saverawdata;
+    EdtScript.Text := scriptpath;
+    EdtPort.Text := IntToStr(tcpport);
+    EdtBind.Text := bindadr;
   end;
 end;
 
-procedure TFormSettings.GetSettings(VAR setup:ZViewSettings);
+procedure TFormSettings.GetSettings(var setup: ZViewSettings);
 begin
-  with setup do begin
-    resolution:=StrToInt(ComRes.Text);
-    rotation:=StrToInt(ComRotate.Text);
-    width:=StrToFloat(EdtWidth.Text);
-    height:=StrToFloat(EdtHeight.Text);
-    save:=ChbSave.Checked;
-    savepath:=EdtPath.Text;
-    print:=ChbPrint.Checked;
-    printraw:=ChbRaw.Checked;
-    printer:=ComPrinter.Text;
-    executescript:=ChbScript.Checked;
-    saverawdata:=ChbSaveRaw.Checked;
-    scriptpath:=EdtScript.Text;
-    tcpport:=StrToInt(EdtPort.Text);
-    bindadr:=EdtBind.Text;
+  with setup do
+  begin
+    resolution := StrToInt(ComRes.Text);
+    rotation := StrToInt(ComRotate.Text);
+    Width := StrToFloat(EdtWidth.Text);
+    Height := StrToFloat(EdtHeight.Text);
+    save := ChbSave.Checked;
+    savepath := EdtPath.Text;
+    print := ChbPrint.Checked;
+    printraw := ChbRaw.Checked;
+    printer := ComPrinter.Text;
+    executescript := ChbScript.Checked;
+    saverawdata := ChbSaveRaw.Checked;
+    scriptpath := EdtScript.Text;
+    tcpport := StrToInt(EdtPort.Text);
+    bindadr := EdtBind.Text;
   end;
 
 end;

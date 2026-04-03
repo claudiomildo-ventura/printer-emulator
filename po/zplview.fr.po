@@ -26,11 +26,15 @@ msgid "Datei"
 msgstr ""
 
 #: tform1.menuitem2.caption
+#, fuzzy
+#| msgid "Settings"
 msgctxt "tform1.menuitem2.caption"
 msgid "Einstellungen"
 msgstr "Settings"
 
 #: tform1.menuitem3.caption
+#, fuzzy
+#| msgid "Exit"
 msgid "Ende"
 msgstr "End"
 
@@ -44,5 +48,100 @@ msgstr ""
 
 #: tform1.tblock.hint
 msgid "Prevent your ZPL code from being overwritten"
+msgstr ""
+
+#: tformsettings.button1.caption
+msgid "..."
+msgstr ""
+
+#: tformsettings.caption
+#, fuzzy
+#| msgid "Settings"
+msgctxt "tformsettings.caption"
+msgid "Einstellungen"
+msgstr "Settings"
+
+#: tformsettings.chbprint.caption
+msgid "Drucken"
+msgstr ""
+
+#: tformsettings.chbraw.caption
+msgid "Raw Printer"
+msgstr ""
+
+#: tformsettings.chbsave.caption
+msgid "PNG speichern"
+msgstr ""
+
+#: tformsettings.chbsaveraw.caption
+msgid "Rohdaten speichern"
+msgstr ""
+
+#: tformsettings.chbsaveraw.hint
+msgid "Save raw ZPL to current dir"
+msgstr ""
+
+#: tformsettings.chbscript.caption
+msgid "Skript ausführen"
+msgstr ""
+
+#: tformsettings.edit1.hint
+msgid "Rendering engine service URL or local printer's address"
+msgstr ""
+
+#: tformsettings.edtbind.text
+msgid "0.0.0.0"
+msgstr ""
+
+#: tformsettings.edtheight.text
+msgid "EdtHeight"
+msgstr ""
+
+#: tformsettings.edtpath.text
+msgid "EdtPath"
+msgstr ""
+
+#: tformsettings.edtport.text
+msgid "9100"
+msgstr ""
+
+#: tformsettings.edtscript.text
+msgid "EdtScript"
+msgstr ""
+
+#: tformsettings.edtwidth.text
+msgid "EdtWidth"
+msgstr ""
+
+#: tformsettings.label1.caption
+msgid "Auflösung DPI"
+msgstr ""
+
+#: tformsettings.label2.caption
+msgid "Rotation"
+msgstr ""
+
+#: tformsettings.label3.caption
+msgid "Breite Inch"
+msgstr ""
+
+#: tformsettings.label4.caption
+msgid "Höhe Inch"
+msgstr ""
+
+#: tformsettings.label5.caption
+msgid "TCP Port"
+msgstr ""
+
+#: tformsettings.label6.caption
+msgid "Bind Adresse"
+msgstr ""
+
+#: tformsettings.label7.caption
+msgid "ZPL Viewer 0.5"
+msgstr ""
+
+#: tformsettings.rgengine.caption
+msgid "Render Engine"
 msgstr ""
 

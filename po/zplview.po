@@ -10,16 +10,16 @@ msgid "ZPL-View"
 msgstr ""
 
 #: tform1.menuitem1.caption
-msgid "Datei"
+msgid "File"
 msgstr ""
 
 #: tform1.menuitem2.caption
 msgctxt "tform1.menuitem2.caption"
-msgid "Einstellungen"
+msgid "Settings"
 msgstr ""
 
 #: tform1.menuitem3.caption
-msgid "Ende"
+msgid "Exit"
 msgstr ""
 
 #: tform1.statusbar1.panels[1].text
@@ -40,11 +40,11 @@ msgstr ""
 
 #: tformsettings.caption
 msgctxt "tformsettings.caption"
-msgid "Einstellungen"
+msgid "Settings"
 msgstr ""
 
 #: tformsettings.chbprint.caption
-msgid "Drucken"
+msgid "Print"
 msgstr ""
 
 #: tformsettings.chbraw.caption
@@ -52,11 +52,11 @@ msgid "Raw Printer"
 msgstr ""
 
 #: tformsettings.chbsave.caption
-msgid "PNG speichern"
+msgid "Save PNG"
 msgstr ""
 
 #: tformsettings.chbsaveraw.caption
-msgid "Rohdaten speichern"
+msgid "Save raw data"
 msgstr ""
 
 #: tformsettings.chbsaveraw.hint
@@ -64,7 +64,7 @@ msgid "Save raw ZPL to current dir"
 msgstr ""
 
 #: tformsettings.chbscript.caption
-msgid "Skript ausführen"
+msgid "Execute script"
 msgstr ""
 
 #: tformsettings.edit1.hint
@@ -96,7 +96,7 @@ msgid "EdtWidth"
 msgstr ""
 
 #: tformsettings.label1.caption
-msgid "Auflösung DPI"
+msgid "Resolution DPI"
 msgstr ""
 
 #: tformsettings.label2.caption
@@ -104,11 +104,11 @@ msgid "Rotation"
 msgstr ""
 
 #: tformsettings.label3.caption
-msgid "Breite Inch"
+msgid "Width (inches)"
 msgstr ""
 
 #: tformsettings.label4.caption
-msgid "Höhe Inch"
+msgid "Height (inches)"
 msgstr ""
 
 #: tformsettings.label5.caption
@@ -116,7 +116,7 @@ msgid "TCP Port"
 msgstr ""
 
 #: tformsettings.label6.caption
-msgid "Bind Adresse"
+msgid "Bind Address"
 msgstr ""
 
 #: tformsettings.label7.caption
