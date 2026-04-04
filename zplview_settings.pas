@@ -55,8 +55,6 @@ type
     Label7: TLabel;
     RGEngine: TRadioGroup;
     procedure FormShow(Sender: TObject);
-  private
-
   public
     procedure PutSettings(var setup: ZViewSettings);
     procedure GetSettings(var setup: ZViewSettings);
@@ -77,47 +75,58 @@ begin
 end;
 
 procedure TFormSettings.PutSettings(var setup: ZViewSettings);
+var
+  idx: Integer;
 begin
   ComPrinter.Items.Assign(Printer.Printers);
-  with setup do
-  begin
-    ComRes.Text := IntToStr(resolution);
-    ComRotate.Text := IntToStr(rotation);
-    EdtWidth.Text := FloatToStr(Width);
-    EdtHeight.Text := FloatToStr(Height);
-    ChbSave.Checked := save;
-    EdtPath.Text := savepath;
-    ChbPrint.Checked := print;
-    ChbRaw.Checked := printraw;
-    ComPrinter.ItemIndex := ComPrinter.Items.IndexOf(printer);
-    ChbScript.Checked := executescript;
-    ChbSaveRaw.Checked := saverawdata;
-    EdtScript.Text := scriptpath;
-    EdtPort.Text := IntToStr(tcpport);
-    EdtBind.Text := bindadr;
-  end;
+
+  ComRes.Text := IntToStr(setup.resolution);
+  ComRotate.Text := IntToStr(setup.rotation);
+  EdtWidth.Text := FloatToStr(setup.Width);
+  EdtHeight.Text := FloatToStr(setup.Height);
+
+  ChbSave.Checked := setup.save;
+  EdtPath.Text := setup.savepath;
+
+  ChbPrint.Checked := setup.print;
+  ChbRaw.Checked := setup.printraw;
+
+  idx := ComPrinter.Items.IndexOf(setup.printer);
+  
+  if idx >= 0 then
+    ComPrinter.ItemIndex := idx
+  else
+    ComPrinter.ItemIndex := -1;
+
+  ChbScript.Checked := setup.executescript;
+  ChbSaveRaw.Checked := setup.saverawdata;
+
+  EdtScript.Text := setup.scriptpath;
+  EdtPort.Text := IntToStr(setup.tcpport);
+  EdtBind.Text := setup.bindadr;
 end;
 
 procedure TFormSettings.GetSettings(var setup: ZViewSettings);
 begin
-  with setup do
-  begin
-    resolution := StrToInt(ComRes.Text);
-    rotation := StrToInt(ComRotate.Text);
-    Width := StrToFloat(EdtWidth.Text);
-    Height := StrToFloat(EdtHeight.Text);
-    save := ChbSave.Checked;
-    savepath := EdtPath.Text;
-    print := ChbPrint.Checked;
-    printraw := ChbRaw.Checked;
-    printer := ComPrinter.Text;
-    executescript := ChbScript.Checked;
-    saverawdata := ChbSaveRaw.Checked;
-    scriptpath := EdtScript.Text;
-    tcpport := StrToInt(EdtPort.Text);
-    bindadr := EdtBind.Text;
-  end;
+  setup.resolution := StrToIntDef(ComRes.Text, 0);
+  setup.rotation := StrToIntDef(ComRotate.Text, 0);
 
+  setup.Width := StrToFloatDef(EdtWidth.Text, 0);
+  setup.Height := StrToFloatDef(EdtHeight.Text, 0);
+
+  setup.save := ChbSave.Checked;
+  setup.savepath := EdtPath.Text;
+
+  setup.print := ChbPrint.Checked;
+  setup.printraw := ChbRaw.Checked;
+  setup.printer := ComPrinter.Text;
+
+  setup.executescript := ChbScript.Checked;
+  setup.saverawdata := ChbSaveRaw.Checked;
+
+  setup.scriptpath := EdtScript.Text;
+  setup.tcpport := StrToIntDef(EdtPort.Text, 0);
+  setup.bindadr := EdtBind.Text;
 end;
 
 end.

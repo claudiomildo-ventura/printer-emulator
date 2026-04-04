@@ -62,12 +62,12 @@ begin
   { Force '.' as decimal separator so the URL is locale-independent. }
   FmtSettings := DefaultFormatSettings;
   FmtSettings.DecimalSeparator := '.';
-  Result := Format(
-    'http://api.labelary.com/v1/printers/%s/labels/%nx%n/0/',
-    [ResolutionToDpiString(Settings.resolution),
-     Settings.Width,
-     Settings.Height],
-    FmtSettings);
+
+  Result := Format('http://api.labelary.com/v1/printers/%s/labels/%nx%n/0/',
+                   [ResolutionToDpiString(Settings.resolution),
+                   Settings.Width,
+                   Settings.Height],
+                   FmtSettings);
 end;
 
 { Extracts the response body from ImageData as a short error string.
@@ -108,9 +108,7 @@ begin
         ErrorMsg := ReadErrorBody(ImageData)
       else
         ErrorMsg := HttpClient.ResponseStatusText;
-      raise ELabelaryError.CreateFmt(
-        'Labelary API returned HTTP %d: %s',
-        [HttpClient.ResponseStatusCode, ErrorMsg]);
+      raise ELabelaryError.CreateFmt('Labelary API returned HTTP %d: %s', [HttpClient.ResponseStatusCode, ErrorMsg]);
     end;
 
     ImageData.Position := 0;

@@ -4,7 +4,7 @@
 {"hash":93080258,"name":"tform1.brendermanual.caption","sourcebytes":[82,101,110,100,101,114],"value":"Render"},
 {"hash":35421998,"name":"tform1.tblock.hint","sourcebytes":[80,114,101,118,101,110,116,32,121,111,117,114,32,90,80,76,32,99,111,100,101,32,102,114,111,109,32,98,101,105,110,103,32,111,118,101,114,119,114,105,116,116,101,110],"value":"Prevent your ZPL code from being overwritten"},
 {"hash":87400884,"name":"tform1.tblock.caption","sourcebytes":[76,111,99,107,101,100],"value":"Locked"},
-{"hash":4885177,"name":"tform1.menuitem1.caption","sourcebytes":[68,97,116,101,105],"value":"Datei"},
-{"hash":255846078,"name":"tform1.menuitem2.caption","sourcebytes":[69,105,110,115,116,101,108,108,117,110,103,101,110],"value":"Einstellungen"},
-{"hash":312485,"name":"tform1.menuitem3.caption","sourcebytes":[69,110,100,101],"value":"Ende"}
+{"hash":315429,"name":"tform1.menuitem1.caption","sourcebytes":[70,105,108,101],"value":"File"},
+{"hash":213582195,"name":"tform1.menuitem2.caption","sourcebytes":[83,101,116,116,105,110,103,115],"value":"Settings"},
+{"hash":315140,"name":"tform1.menuitem3.caption","sourcebytes":[69,120,105,116],"value":"Exit"}
 ]}

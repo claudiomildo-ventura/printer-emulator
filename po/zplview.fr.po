@@ -22,20 +22,20 @@ msgid "ZPL-View"
 msgstr ""
 
 #: tform1.menuitem1.caption
-msgid "Datei"
+msgid "File"
 msgstr ""
 
 #: tform1.menuitem2.caption
 #, fuzzy
 #| msgid "Settings"
 msgctxt "tform1.menuitem2.caption"
-msgid "Einstellungen"
+msgid "Settings"
 msgstr "Settings"
 
 #: tform1.menuitem3.caption
 #, fuzzy
 #| msgid "Exit"
-msgid "Ende"
+msgid "Exit"
 msgstr "End"
 
 #: tform1.statusbar1.panels[1].text

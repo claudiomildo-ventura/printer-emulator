@@ -114,21 +114,19 @@ end;
 
 function TForm1.IniFilePath: string;
 var
-  BaseName: string;
-  EnvDir: string;
+  BaseName, EnvDir: string;
 begin
   BaseName := ChangeFileExt(ExtractFileName(Application.ExeName), '.ini');
+
   EnvDir := GetEnvironmentVariable('APPDATA');
   if EnvDir <> '' then
-    Result := IncludeTrailingPathDelimiter(EnvDir) + BaseName
-  else
-  begin
-    EnvDir := GetEnvironmentVariable('HOME');
-    if EnvDir <> '' then
-      Result := IncludeTrailingPathDelimiter(EnvDir) + '.config' + PathDelim + BaseName
-    else
-      Result := BaseName;
-  end;
+    Exit(IncludeTrailingPathDelimiter(EnvDir) + BaseName);
+
+  EnvDir := GetEnvironmentVariable('HOME');
+  if EnvDir <> '' then
+    Exit(IncludeTrailingPathDelimiter(EnvDir) + '.config' + PathDelim + BaseName);
+
+  Result := BaseName;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -139,7 +137,9 @@ begin
   FIniFilePath := IniFilePath;
   ResetSettings;
   LoadSettings;
-  StatusBar1.Panels[3].Text := GetLANIP + ':' + IntToStr(FSettings.tcpport);
+
+  if StatusBar1.Panels.Count > 3 then
+    StatusBar1.Panels[3].Text := GetLANIP + ':' + IntToStr(FSettings.tcpport);
 
   FTcpServer := TZplTcpServer.Create(FSettings.bindadr, FSettings.tcpport);
   FTcpServer.OnDataReceived := @HandleZplDataReceived;
@@ -149,193 +149,6 @@ begin
   FDragDir := -1;
   FRulersVisible := True;
   Panel1.Width := 15;
-end;
-
-procedure TForm1.Image1DragDrop(Sender, Source: TObject; X, Y: integer);
-var
-  ImagePixelPos: longint;
-begin
-  if ((Source = Shape1) and (FDragDir > -1) and (Image1.Picture.Graphic <> nil)) then
-  begin
-    SetLength(FRulers, Length(FRulers) + 1);
-    SetLength(FRulerTypes, Length(FRulerTypes) + 1);
-    FRulerTypes[High(FRulerTypes)] := FDragDir;
-    ImagePixelPos := FDragData * Image1.Picture.Width div Image1.Width;
-    FRulers[High(FRulers)] := ImagePixelPos;
-    FDragDir := -1;
-    StatusBar1.Panels[2].Text := '';
-    Image1.Repaint;
-  end;
-end;
-
-procedure TForm1.Image1DragOver(Sender, Source: TObject; X, Y: integer; State: TDragState; var Accept: boolean);
-var
-  CursorPos: TPoint;
-begin
-  if (Source = Shape1) then
-  begin
-    Accept := True;
-    FRulersVisible := True;
-    CursorPos := ScreenToClient(Mouse.CursorPos);
-    if FDragDir = -1 then
-    begin
-      if CursorPos.X >= 15 then FDragDir := 0;  // horizontal ruler
-      if CursorPos.Y >= 15 then FDragDir := 1;  // vertical ruler
-    end;
-    if FDragDir = 0 then
-    begin
-      StatusBar1.Panels[2].Text := 'X = ' + IntToStr(CursorPos.X);
-      FDragData := CursorPos.X;
-    end;
-    if FDragDir = 1 then
-    begin
-      StatusBar1.Panels[2].Text := 'Y = ' + IntToStr(CursorPos.Y);
-      FDragData := CursorPos.Y;
-    end;
-    Image1.Repaint;
-  end;
-end;
-
-procedure TForm1.Image1Paint(Sender: TObject);
-var
-  n: integer;
-  DisplayPos: longint;
-begin
-  if FRulersVisible and (Image1.Picture.Graphic <> nil) then
-  begin
-    if Length(FRulerTypes) > 0 then
-    begin
-      Image1.Canvas.Pen.Color := clGreen;
-      for n := 0 to High(FRulerTypes) do
-      begin
-        DisplayPos := FRulers[n] * Image1.Width div Image1.Picture.Width;
-        if FRulerTypes[n] = 0 then
-        begin
-          Image1.Canvas.MoveTo(DisplayPos, 0);
-          Image1.Canvas.LineTo(DisplayPos, Image1.Canvas.Height);
-        end;
-        if FRulerTypes[n] = 1 then
-        begin
-          Image1.Canvas.MoveTo(0, DisplayPos);
-          Image1.Canvas.LineTo(Image1.Canvas.Width, DisplayPos);
-        end;
-      end;
-    end;
-    if FDragDir > -1 then
-    begin
-      Image1.Canvas.Pen.Color := clRed;
-      if FDragDir = 0 then
-      begin
-        Image1.Canvas.MoveTo(FDragData, 0);
-        Image1.Canvas.LineTo(FDragData, Image1.Canvas.Height);
-      end;
-      if FDragDir = 1 then
-      begin
-        Image1.Canvas.MoveTo(0, FDragData);
-        Image1.Canvas.LineTo(Image1.Canvas.Width, FDragData);
-      end;
-    end;
-  end;
-end;
-
-procedure TForm1.Image1StartDrag(Sender: TObject; var DragObject: TDragObject);
-begin
-
-end;
-
-procedure TForm1.MenuItem2Click(Sender: TObject);
-begin
-  FormSettings.PutSettings(FSettings);
-  if FormSettings.ShowModal = mrOk then
-  begin
-    FormSettings.GetSettings(FSettings);
-    StatusBar1.Panels[1].Text := IntToStr(FSettings.rotation);
-    StatusBar1.Panels[3].Text := GetLANIP + ':' + IntToStr(FSettings.tcpport);
-    SaveSettings;
-    if FZplData.Size > 0 then FetchAndDisplayLabel;
-    if FTcpServer.Port <> FSettings.tcpport then
-      RecreateServer;
-  end;
-end;
-
-procedure TForm1.MenuItem3Click(Sender: TObject);
-begin
-  Form1.Close;
-end;
-
-procedure TForm1.MSourceCodeChange(Sender: TObject);
-begin
-  TBLock.Checked := (MSourceCode.Lines.Count > 3);
-end;
-
-procedure TForm1.Panel2Click(Sender: TObject);
-begin
-  if Panel1.Width < 50 then
-  begin
-    Form1.Width := Form1.Width + Form1.Width;
-    Panel1.Width := Panel1.Width + (Form1.Width div 2);
-  end
-  else
-  begin
-    Form1.Width := Form1.Width div 2;
-    Panel1.Width := 15;
-  end;
-end;
-
-procedure TForm1.Shape1EndDrag(Sender, Target: TObject; X, Y: integer);
-begin
-  FDragDir := -1;
-  Image1.Repaint;
-end;
-
-procedure TForm1.Shape1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
-begin
-  if (Button = mbLeft) and (Image1.Picture.Graphic <> nil) then
-  begin
-    Shape1.BeginDrag(False);
-    if not FRulersVisible then
-    begin
-      FRulersVisible := True;
-      Image1.Repaint;
-    end;
-  end;
-  if Button = mbRight then
-  begin
-    SetLength(FRulers, 0);
-    SetLength(FRulerTypes, 0);
-    Image1.Repaint;
-  end;
-end;
-
-procedure TForm1.Shape1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
-begin
-  if (Button = mbLeft) and (X < Shape1.Width) and (Y < Shape1.Height) then
-  begin
-    FRulersVisible := False;
-    Image1.Repaint;
-  end;
-end;
-
-procedure TForm1.Shape1StartDrag(Sender: TObject; var DragObject: TDragObject);
-begin
-  FDragDir := -1;
-  FRulersVisible := True;
-end;
-
-procedure TForm1.StatusBar1Click(Sender: TObject);
-begin
-  with FSettings do
-  begin
-    rotation := rotation + 90;
-    if rotation > 270 then rotation := 0;
-    StatusBar1.Panels[1].Text := IntToStr(rotation);
-  end;
-  if FZplData.Size > 0 then FetchAndDisplayLabel;
-end;
-
-procedure TForm1.TBLockChange(Sender: TObject);
-begin
-
 end;
 
 procedure TForm1.AcceptTimerTimer(Sender: TObject);
@@ -351,8 +164,10 @@ begin
   begin
     ZplText := MSourceCode.Lines.Text;
     FZplData.Clear;
+
     if Length(ZplText) > 0 then
-      FZplData.Write(ZplText[1], Length(ZplText));
+      FZplData.WriteBuffer(ZplText[1], Length(ZplText));
+
     FZplData.Position := 0;
     FetchAndDisplayLabel;
   end;
@@ -364,37 +179,112 @@ begin
   FreeAndNil(FZplData);
 end;
 
+procedure TForm1.MenuItem2Click(Sender: TObject);
+begin
+  FormSettings.PutSettings(FSettings);
+
+  if FormSettings.ShowModal = mrOk then
+  begin
+    FormSettings.GetSettings(FSettings);
+
+    StatusBar1.Panels[1].Text := IntToStr(FSettings.rotation);
+
+    if StatusBar1.Panels.Count > 3 then
+      StatusBar1.Panels[3].Text := GetLANIP + ':' + IntToStr(FSettings.tcpport);
+
+    SaveSettings;
+
+    if FZplData.Size > 0 then
+      FetchAndDisplayLabel;
+
+    if FTcpServer.Port <> FSettings.tcpport then
+      RecreateServer;
+  end;
+end;
+
+procedure TForm1.MenuItem3Click(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TForm1.MSourceCodeChange(Sender: TObject);
+begin
+  TBLock.Checked := (MSourceCode.Lines.Count > 3);
+end;
+
+procedure TForm1.Panel2Click(Sender: TObject);
+var
+  NewWidth: Integer;
+begin
+  if Panel1.Width < 50 then
+    NewWidth := 150
+  else
+    NewWidth := 15;
+
+  if Panel1.Width <> NewWidth then
+  begin
+    Panel1.DisableAlign;
+    try
+      Panel1.Width := NewWidth;
+    finally
+      Panel1.EnableAlign;
+    end;
+  end;
+end;
+
+procedure TForm1.StatusBar1Click(Sender: TObject);
+begin
+  FSettings.rotation := FSettings.rotation + 90;
+  if FSettings.rotation > 270 then
+    FSettings.rotation := 0;
+
+  StatusBar1.Panels[1].Text := IntToStr(FSettings.rotation);
+
+  if FZplData.Size > 0 then
+    FetchAndDisplayLabel;
+end;
+
 procedure TForm1.RePrint;
 var
-  PrinterIndex: integer;
-  BytesWritten: integer;
+  PrinterIndex, BytesWritten: integer;
 begin
   PrinterIndex := Printer.Printers.IndexOf(FSettings.printer);
+
   if PrinterIndex < 0 then
   begin
-    MessageDlg('Printer not found',
-      'Selected printer "' + FSettings.printer + '" was not found.',
-      mtError, [mbOK], 0);
+    MessageDlg('Printer not found', 'Selected printer "' + FSettings.printer + '" was not found.', mtError, [mbOK], 0);
     Exit;
   end;
+
   if FZplData.Size = 0 then
   begin
-    MessageDlg('Nothing to print',
-      'There is no ZPL data to print.',
-      mtWarning, [mbOK], 0);
+    MessageDlg('Nothing to print', 'There is no ZPL data to print.', mtWarning, [mbOK], 0);
     Exit;
   end;
+
+  if (not FSettings.printraw) and (Image1.Picture.Graphic = nil) then
+  begin
+    MessageDlg('Print error', 'No rendered image available.', mtError, [mbOK], 0);
+    Exit;
+  end;
+
   Printer.PrinterIndex := PrinterIndex;
-  if Printer.Printing then Printer.Abort;
+
+  if Printer.Printing then
+    Printer.Abort;
+
   try
     Printer.Title := 'ZPL-View reprint';
     Printer.RawMode := FSettings.printraw;
     Printer.BeginDoc;
+
     if FSettings.printraw then
       Printer.Write(FZplData.Memory^, FZplData.Size, BytesWritten)
     else
       Printer.Canvas.StretchDraw(
-        Classes.Rect(0, 0, Image1.Picture.Graphic.Width * Printer.XDPI div FSettings.resolution, Image1.Picture.Graphic.Height * Printer.YDPI div FSettings.resolution),
+        Classes.Rect(0, 0,
+          Image1.Picture.Graphic.Width * Printer.XDPI div FSettings.resolution,
+          Image1.Picture.Graphic.Height * Printer.YDPI div FSettings.resolution),
         Image1.Picture.Graphic);
   finally
     Printer.EndDoc;
@@ -420,13 +310,21 @@ begin
         Exit;
       end;
     end;
+
     Image1.Picture.LoadFromStream(ImageData);
+
     Inc(FJobCount);
-    StatusBar1.Panels[0].Text := Format('#%d - %s', [FJobCount, DateTimeToStr(Now)]);
-    if FSettings.save then SaveLabelImage(Image1.Picture, FSettings.savepath);
-    if FSettings.print then RePrint;
+    StatusBar1.Panels[0].Text :=
+      Format('#%d - %s', [FJobCount, DateTimeToStr(Now)]);
+
+    if FSettings.save then
+      SaveLabelImage(Image1.Picture, FSettings.savepath);
+
+    if FSettings.print then
+      RePrint;
+
   finally
-    FreeAndNil(ImageData);
+    ImageData.Free;
   end;
 end;
 
@@ -434,14 +332,16 @@ procedure TForm1.HandleZplDataReceived(const ZplData: TMemoryStream);
 var
   ZplText: string;
 begin
-  { Copy the incoming job into our persistent buffer for reprints / re-renders }
   FZplData.Clear;
   ZplData.Position := 0;
   FZplData.CopyFrom(ZplData, ZplData.Size);
   FZplData.Position := 0;
 
-  { Extract as text for display and logging }
-  SetString(ZplText, pansichar(FZplData.Memory), FZplData.Size);
+  if FZplData.Size > 0 then
+    SetString(ZplText, PAnsiChar(FZplData.Memory), FZplData.Size)
+  else
+    ZplText := '';
+
   DebugLn(DateTimeToStr(Now));
   DebugLn(ZplText);
 
@@ -456,7 +356,9 @@ end;
 
 procedure TForm1.RecreateServer;
 begin
-  FreeAndNil(FTcpServer);
+  if Assigned(FTcpServer) then
+    FreeAndNil(FTcpServer);
+
   FTcpServer := TZplTcpServer.Create(FSettings.bindadr, FSettings.tcpport);
   FTcpServer.OnDataReceived := @HandleZplDataReceived;
 end;
@@ -467,23 +369,20 @@ var
 begin
   INI := TINIFile.Create(FIniFilePath);
   try
-    with FSettings do
-    begin
-      resolution := INI.ReadInteger('SETTINGS', 'resolution', 203);
-      rotation := INI.ReadInteger('SETTINGS', 'rotation', 0);
-      Width := INI.ReadFloat('SETTINGS', 'width', 4.0);
-      Height := INI.ReadFloat('SETTINGS', 'height', 3.0);
-      save := INI.ReadBool('SETTINGS', 'save', False);
-      savepath := INI.ReadString('SETTINGS', 'savepath', '');
-      print := INI.ReadBool('SETTINGS', 'print', False);
-      printraw := INI.ReadBool('SETTINGS', 'printraw', False);
-      printer := INI.ReadString('SETTINGS', 'printer', '');
-      executescript := INI.ReadBool('SETTINGS', 'executescript', False);
-      saverawdata := INI.ReadBool('SETTINGS', 'saverawdata', False);
-      scriptpath := INI.ReadString('SETTINGS', 'scriptpath', '');
-      tcpport := INI.ReadInteger('SETTINGS', 'tcpport', 9100);
-      bindadr := INI.ReadString('SETTINGS', 'bindadr', '0.0.0.0');
-    end;
+    FSettings.resolution := INI.ReadInteger('SETTINGS', 'resolution', 203);
+    FSettings.rotation := INI.ReadInteger('SETTINGS', 'rotation', 0);
+    FSettings.Width := INI.ReadFloat('SETTINGS', 'width', 4.0);
+    FSettings.Height := INI.ReadFloat('SETTINGS', 'height', 3.0);
+    FSettings.save := INI.ReadBool('SETTINGS', 'save', False);
+    FSettings.savepath := INI.ReadString('SETTINGS', 'savepath', '');
+    FSettings.print := INI.ReadBool('SETTINGS', 'print', False);
+    FSettings.printraw := INI.ReadBool('SETTINGS', 'printraw', False);
+    FSettings.printer := INI.ReadString('SETTINGS', 'printer', '');
+    FSettings.executescript := INI.ReadBool('SETTINGS', 'executescript', False);
+    FSettings.saverawdata := INI.ReadBool('SETTINGS', 'saverawdata', False);
+    FSettings.scriptpath := INI.ReadString('SETTINGS', 'scriptpath', '');
+    FSettings.tcpport := INI.ReadInteger('SETTINGS', 'tcpport', 9100);
+    FSettings.bindadr := INI.ReadString('SETTINGS', 'bindadr', '0.0.0.0');
   finally
     INI.Free;
   end;
@@ -495,23 +394,20 @@ var
 begin
   INI := TINIFile.Create(FIniFilePath);
   try
-    with FSettings do
-    begin
-      INI.WriteInteger('SETTINGS', 'resolution', resolution);
-      INI.WriteInteger('SETTINGS', 'rotation', rotation);
-      INI.WriteFloat('SETTINGS', 'width', Width);
-      INI.WriteFloat('SETTINGS', 'height', Height);
-      INI.WriteBool('SETTINGS', 'save', save);
-      INI.WriteString('SETTINGS', 'savepath', savepath);
-      INI.WriteBool('SETTINGS', 'print', print);
-      INI.WriteBool('SETTINGS', 'printraw', printraw);
-      INI.WriteString('SETTINGS', 'printer', printer);
-      INI.WriteBool('SETTINGS', 'executescript', executescript);
-      INI.WriteBool('SETTINGS', 'saverawdata', saverawdata);
-      INI.WriteString('SETTINGS', 'scriptpath', scriptpath);
-      INI.WriteInteger('SETTINGS', 'tcpport', tcpport);
-      INI.WriteString('SETTINGS', 'bindadr', bindadr);
-    end;
+    INI.WriteInteger('SETTINGS', 'resolution', FSettings.resolution);
+    INI.WriteInteger('SETTINGS', 'rotation', FSettings.rotation);
+    INI.WriteFloat('SETTINGS', 'width', FSettings.Width);
+    INI.WriteFloat('SETTINGS', 'height', FSettings.Height);
+    INI.WriteBool('SETTINGS', 'save', FSettings.save);
+    INI.WriteString('SETTINGS', 'savepath', FSettings.savepath);
+    INI.WriteBool('SETTINGS', 'print', FSettings.print);
+    INI.WriteBool('SETTINGS', 'printraw', FSettings.printraw);
+    INI.WriteString('SETTINGS', 'printer', FSettings.printer);
+    INI.WriteBool('SETTINGS', 'executescript', FSettings.executescript);
+    INI.WriteBool('SETTINGS', 'saverawdata', FSettings.saverawdata);
+    INI.WriteString('SETTINGS', 'scriptpath', FSettings.scriptpath);
+    INI.WriteInteger('SETTINGS', 'tcpport', FSettings.tcpport);
+    INI.WriteString('SETTINGS', 'bindadr', FSettings.bindadr);
   finally
     INI.Free;
   end;
@@ -519,23 +415,20 @@ end;
 
 procedure TForm1.ResetSettings;
 begin
-  with FSettings do
-  begin
-    resolution := 203;
-    rotation := 0;
-    Width := 4.0;
-    Height := 3.0;
-    save := False;
-    savepath := '';
-    print := False;
-    printraw := False;
-    printer := '';
-    executescript := False;
-    saverawdata := False;
-    scriptpath := '';
-    tcpport := 9100;
-    bindadr := '0.0.0.0';
-  end;
+  FSettings.resolution := 203;
+  FSettings.rotation := 0;
+  FSettings.Width := 4.0;
+  FSettings.Height := 3.0;
+  FSettings.save := False;
+  FSettings.savepath := '';
+  FSettings.print := False;
+  FSettings.printraw := False;
+  FSettings.printer := '';
+  FSettings.executescript := False;
+  FSettings.saverawdata := False;
+  FSettings.scriptpath := '';
+  FSettings.tcpport := 9100;
+  FSettings.bindadr := '0.0.0.0';
 end;
 
 end.
