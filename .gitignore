@@ -1,117 +1,135 @@
-###############################################################################
-# DELPHI - IDE & COMPILER
-###############################################################################
-
-# Compiler‑generated binaries (safe to delete)
+# Executables / libraries
 *.exe
 *.dll
+*.so
+*.dylib
 *.bpl
 *.bpi
 *.dcp
-*.so
 *.apk
-*.drc
-*.map
-*.dres
-*.rsm
-*.tds
-*.dcu
-*.lib
-*.a
-*.o
-*.ocx
 
-# Auto‑generated files (duplicate information)
+# Compiled units / objects
+*.dcu
+*.ppu
+*.o
+*.or
+*.a
+*.lib
+
+# Debug / map / temp compiler files
+*.dbg
+*.map
+*.tds
+*.drc
+*.rsm
+
+###############################################################################
+# DELPHI
+###############################################################################
+
+# Auto-generated / intermediate
 *.cfg
 *.hpp
+*.dres
 *Resource.rc
 
-# IDE local/user files (should not be committed)
+# IDE user-specific
 *.local
 *.identcache
 *.projdata
 *.tvsconfig
 *.dsk
 
-# History and backups
+# History / recovery
 __history/
 __recovery/
 *.~*
 
-# Castalia statistics (Castalia bundled since XE7)
-*.stat
+# Optional (uncomment if needed)
 
-# Boss package manager
-modules/
-
-###############################################################################
-# DELPHI – OPTIONAL FILES TO IGNORE (uncomment if desired)
-###############################################################################
-
-# Binary resource files
 # *.res
-
-# Type Library (automatically generated in modern Delphi)
-# *.tlb
-
-# Diagram Portfolio (used up to Delphi 7)
-# *.ddp
-
-# Visual LiveBindings files
-# *.vlb
-
-# Deployment Manager configuration (mainly for mobile/remote debug)
 # *.deployproj
-
-# External C/C++ object files (safe to ignore if not using external libs)
+# *.vlb
+# *.ddp
+# *.tlb
 # *.obj
-
 
 ###############################################################################
 # LAZARUS / FREE PASCAL
 ###############################################################################
 
-# Compiler‑generated binaries
-*.exe
-*.dll
-*.so
-*.dylib
+# Generated files
+*.compiled
 *.lrs
 *.res
-*.compiled
-*.dbg
-*.ppu
-*.o
-*.or
-*.a
-
-# Automatically generated files
 *.rst
 *.rsj
 *.lrt
 
-# Lazarus user‑specific project session
+# Session files (user-specific)
 *.lps
 
-# Backup and output folders
+# Backup / build folders
 backup/
-*.bak
 lib/
-
+*.bak
 
 ###############################################################################
-# COMMON SETTINGS
+# VISUAL STUDIO CODE
 ###############################################################################
 
-# macOS applications
-*.app/
+# Ignore all VS Code settings (safe default)
+.vscode/
+*.code-workspace
 
-# Common build output directories
-Bin/
+# --- OR use this instead if you want to share settings ---
+# .vscode/*
+# !.vscode/settings.json
+# !.vscode/extensions.json
+# !.vscode/launch.json
+
+###############################################################################
+# PROJECT OUTPUT DIRECTORIES
+###############################################################################
+
 bin/
+Bin/
+Debug/
+Release/
+
 Win32/
 Win64/
 Linux64/
 macOS/
-Release/
-Debug/
+
+###############################################################################
+# DEPENDENCIES / PACKAGE MANAGERS
+###############################################################################
+
+# Boss (Delphi package manager)
+modules/
+
+###############################################################################
+# SYSTEM / GENERAL FILES
+###############################################################################
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Logs / temp
+*.log
+*.tmp
+*.temp
+
+###############################################################################
+# OPTIONAL (ENABLE IF NEEDED)
+###############################################################################
+
+# macOS app bundles
+# *.app/
+# Castalia stats
+# *.stat

@@ -1,21 +1,21 @@
 object Form1: TForm1
   Left = 353
-  Height = 700
+  Height = 675
   Top = 212
-  Width = 777
+  Width = 772
   BorderWidth = 5
   Caption = 'ZPL-View'
-  ClientHeight = 700
-  ClientWidth = 777
+  ClientHeight = 675
+  ClientWidth = 772
   Menu = MainMenu1
   LCLVersion = '4.4.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   object Image1: TImage
     Left = 5
-    Height = 667
+    Height = 642
     Top = 5
-    Width = 617
+    Width = 612
     Align = alClient
     ParentShowHint = False
     Proportional = True
@@ -28,8 +28,8 @@ object Form1: TForm1
   object StatusBar1: TStatusBar
     Left = 5
     Height = 23
-    Top = 672
-    Width = 767
+    Top = 647
+    Width = 762
     Panels = <    
       item
         Width = 150
@@ -59,17 +59,17 @@ object Form1: TForm1
     OnStartDrag = Shape1StartDrag
   end
   object Panel1: TPanel
-    Left = 622
-    Height = 667
+    Left = 617
+    Height = 642
     Top = 5
     Width = 150
     Align = alRight
-    ClientHeight = 667
+    ClientHeight = 642
     ClientWidth = 150
     TabOrder = 1
     object MSourceCode: TMemo
       Left = 16
-      Height = 665
+      Height = 640
       Top = 1
       Width = 133
       Align = alClient
@@ -79,7 +79,7 @@ object Form1: TForm1
     object BRenderManual: TButton
       Left = 97
       Height = 25
-      Top = 640
+      Top = 615
       Width = 51
       Anchors = [akRight, akBottom]
       Caption = 'Render'
@@ -88,7 +88,7 @@ object Form1: TForm1
     end
     object Panel2: TPanel
       Left = 1
-      Height = 665
+      Height = 640
       Top = 1
       Width = 15
       Align = alLeft
@@ -99,7 +99,7 @@ object Form1: TForm1
       Left = 48
       Height = 25
       Hint = 'Prevent your ZPL code from being overwritten'
-      Top = 640
+      Top = 615
       Width = 48
       Anchors = [akRight, akBottom]
       Caption = 'Locked'
@@ -110,15 +110,16 @@ object Form1: TForm1
     end
   end
   object MainMenu1: TMainMenu
-    Left = 32
+    Left = 200
+    Top = 144
     object MenuItem1: TMenuItem
-      Caption = 'Datei'
+      Caption = 'File'
       object MenuItem2: TMenuItem
-        Caption = 'Einstellungen'
+        Caption = 'Settings'
         OnClick = MenuItem2Click
       end
       object MenuItem3: TMenuItem
-        Caption = 'Ende'
+        Caption = 'Exit'
         OnClick = MenuItem3Click
       end
     end
@@ -126,7 +127,7 @@ object Form1: TForm1
   object AcceptTimer: TTimer
     Interval = 150
     OnTimer = AcceptTimerTimer
-    Left = 64
-    Top = 8
+    Left = 200
+    Top = 80
   end
 end

@@ -26,7 +26,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="5"/>
-      <BuildNr Value="119"/>
+      <BuildNr Value="121"/>
       <Language Value="0407"/>
       <Attributes pvaPreRelease="True"/>
       <StringTable CompanyName="Helmut Gruber" ProductName="ZPL-Viewer"/>
@@ -121,7 +121,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="5">
+    <Units Count="8">
       <Unit0>
         <Filename Value="zplview.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -148,6 +148,18 @@
         <Filename Value="zplview_settings.lfm"/>
         <IsPartOfProject Value="True"/>
       </Unit4>
+      <Unit5>
+        <Filename Value="zplnet.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="zplprocessor.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="zplstorage.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit7>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
