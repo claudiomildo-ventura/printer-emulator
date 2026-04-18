@@ -37,20 +37,11 @@ type
     procedure BRenderManualClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
-    procedure Image1DragDrop(Sender, Source: TObject; X, Y: integer);
-    procedure Image1DragOver(Sender, Source: TObject; X, Y: integer; State: TDragState; var Accept: boolean);
-    procedure Image1Paint(Sender: TObject);
-    procedure Image1StartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure MenuItem2Click(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
     procedure MSourceCodeChange(Sender: TObject);
     procedure Panel2Click(Sender: TObject);
-    procedure Shape1EndDrag(Sender, Target: TObject; X, Y: integer);
-    procedure Shape1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
-    procedure Shape1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
-    procedure Shape1StartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure StatusBar1Click(Sender: TObject);
-    procedure TBLockChange(Sender: TObject);
   private
     { Network server — polls on AcceptTimer tick }
     FTcpServer: TZplTcpServer;
@@ -149,6 +140,8 @@ begin
   FDragDir := -1;
   FRulersVisible := True;
   Panel1.Width := 15;
+
+  Self.Position := poScreenCenter;
 end;
 
 procedure TForm1.AcceptTimerTimer(Sender: TObject);
@@ -314,8 +307,7 @@ begin
     Image1.Picture.LoadFromStream(ImageData);
 
     Inc(FJobCount);
-    StatusBar1.Panels[0].Text :=
-      Format('#%d - %s', [FJobCount, DateTimeToStr(Now)]);
+    StatusBar1.Panels[0].Text := Format('#%d - %s', [FJobCount, DateTimeToStr(Now)]);
 
     if FSettings.save then
       SaveLabelImage(Image1.Picture, FSettings.savepath);

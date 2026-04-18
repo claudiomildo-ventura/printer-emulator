@@ -259,6 +259,6 @@ object FormSettings: TFormSettings
     Height = 15
     Top = 352
     Width = 110
-    Caption = 'ZPL Viewer v0.5'
+    Caption = 'Print emulator - Label Preview (ZPL) v0.1'
   end
 end

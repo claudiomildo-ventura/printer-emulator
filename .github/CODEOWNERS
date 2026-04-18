@@ -1,0 +1,4 @@
+# This is a comment
+*       @ClaudioV05          # Default owner for all files
+/docs/  @team-docs           # Team responsible for the docs directory
+*.java  @java-expert         # Owner for all Java files

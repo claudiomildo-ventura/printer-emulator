@@ -1,5 +1,5 @@
 {"version":1,"strings":[
-{"hash":83020343,"name":"tform1.caption","sourcebytes":[90,80,76,45,86,105,101,119],"value":"ZPL-View"},
+{"hash":106982857,"name":"tform1.caption","sourcebytes":[80,114,105,110,116,32,101,109,117,108,97,116,111,114,32,45,32,76,97,98,101,108,32,80,114,101,118,105,101,119,32,40,90,80,76,41],"value":"Print emulator - Label Preview (ZPL)"},
 {"hash":48,"name":"tform1.statusbar1.panels[1].text","sourcebytes":[48],"value":"0"},
 {"hash":93080258,"name":"tform1.brendermanual.caption","sourcebytes":[82,101,110,100,101,114],"value":"Render"},
 {"hash":35421998,"name":"tform1.tblock.hint","sourcebytes":[80,114,101,118,101,110,116,32,121,111,117,114,32,90,80,76,32,99,111,100,101,32,102,114,111,109,32,98,101,105,110,103,32,111,118,101,114,119,114,105,116,116,101,110],"value":"Prevent your ZPL code from being overwritten"},

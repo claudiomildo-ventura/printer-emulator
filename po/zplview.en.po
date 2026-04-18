@@ -18,7 +18,7 @@ msgid "Render"
 msgstr ""
 
 #: tform1.caption
-msgid "ZPL-View"
+msgid "Print emulator - Label Preview (ZPL)"
 msgstr ""
 
 #: tform1.menuitem1.caption
