@@ -1,129 +1,126 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: tform1.brendermanual.caption
+#: tfrmprintemulator.brendermanual.caption
+msgctxt "tfrmprintemulator.brendermanual.caption"
 msgid "Render"
 msgstr ""
 
-#: tform1.caption
+#: tfrmprintemulator.caption
+msgctxt "tfrmprintemulator.caption"
 msgid "Print emulator - Label Preview (ZPL)"
 msgstr ""
 
-#: tform1.menuitem1.caption
+#: tfrmprintemulator.menuitem1.caption
+msgctxt "tfrmprintemulator.menuitem1.caption"
 msgid "File"
 msgstr ""
 
-#: tform1.menuitem2.caption
-msgctxt "tform1.menuitem2.caption"
+#: tfrmprintemulator.menuitem2.caption
+msgctxt "tfrmprintemulator.menuitem2.caption"
 msgid "Settings"
 msgstr ""
 
-#: tform1.menuitem3.caption
+#: tfrmprintemulator.menuitem3.caption
+msgctxt "tfrmprintemulator.menuitem3.caption"
 msgid "Exit"
 msgstr ""
 
-#: tform1.statusbar1.panels[1].text
+#: tfrmprintemulator.statusbar1.panels[1].text
+msgctxt "tfrmprintemulator.statusbar1.panels[1].text"
 msgid "0"
 msgstr ""
 
-#: tform1.tblock.caption
+#: tfrmprintemulator.tblock.caption
+msgctxt "tfrmprintemulator.tblock.caption"
 msgid "Locked"
 msgstr ""
 
-#: tform1.tblock.hint
+#: tfrmprintemulator.tblock.hint
+msgctxt "tfrmprintemulator.tblock.hint"
 msgid "Prevent your ZPL code from being overwritten"
 msgstr ""
 
-#: tformsettings.button1.caption
+#: tfrmprintemulatorsettings.button1.caption
+msgctxt "tfrmprintemulatorsettings.button1.caption"
 msgid "..."
 msgstr ""
 
-#: tformsettings.caption
-msgctxt "tformsettings.caption"
-msgid "Einstellungen"
+#: tfrmprintemulatorsettings.caption
+msgctxt "tfrmprintemulatorsettings.caption"
+msgid "Settings"
 msgstr ""
 
-#: tformsettings.chbprint.caption
-msgid "Drucken"
+#: tfrmprintemulatorsettings.chbprint.caption
+msgid "Print"
 msgstr ""
 
-#: tformsettings.chbraw.caption
-msgid "Raw Printer"
+#: tfrmprintemulatorsettings.chbraw.caption
+msgid "Send raw data"
 msgstr ""
 
-#: tformsettings.chbsave.caption
-msgid "PNG speichern"
+#: tfrmprintemulatorsettings.chbsave.caption
+msgid "Save as PNG"
 msgstr ""
 
-#: tformsettings.chbsaveraw.caption
-msgid "Rohdaten speichern"
+#: tfrmprintemulatorsettings.chbsaveraw.caption
+msgid "Save raw ZPL"
 msgstr ""
 
-#: tformsettings.chbsaveraw.hint
-msgid "Save raw ZPL to current dir"
+#: tfrmprintemulatorsettings.chbsaveraw.hint
+msgid "Save raw ZPL to current directory"
 msgstr ""
 
-#: tformsettings.chbscript.caption
-msgid "Skript ausführen"
+#: tfrmprintemulatorsettings.chbscript.caption
+msgid "Execute script"
 msgstr ""
 
-#: tformsettings.edit1.hint
-msgid "Rendering engine service URL or local printer's address"
+#: tfrmprintemulatorsettings.edit1.hint
+msgid "Service URL or printer address"
 msgstr ""
 
-#: tformsettings.edtbind.text
+#: tfrmprintemulatorsettings.edtbind.text
+msgctxt "tfrmprintemulatorsettings.edtbind.text"
 msgid "0.0.0.0"
 msgstr ""
 
-#: tformsettings.edtheight.text
-msgid "EdtHeight"
-msgstr ""
-
-#: tformsettings.edtpath.text
-msgid "EdtPath"
-msgstr ""
-
-#: tformsettings.edtport.text
+#: tfrmprintemulatorsettings.edtport.text
+msgctxt "tfrmprintemulatorsettings.edtport.text"
 msgid "9100"
 msgstr ""
 
-#: tformsettings.edtscript.text
-msgid "EdtScript"
+#: tfrmprintemulatorsettings.label1.caption
+msgid "Resolution (DPI)"
 msgstr ""
 
-#: tformsettings.edtwidth.text
-msgid "EdtWidth"
-msgstr ""
-
-#: tformsettings.label1.caption
-msgid "Auflösung DPI"
-msgstr ""
-
-#: tformsettings.label2.caption
+#: tfrmprintemulatorsettings.label2.caption
+msgctxt "tfrmprintemulatorsettings.label2.caption"
 msgid "Rotation"
 msgstr ""
 
-#: tformsettings.label3.caption
-msgid "Breite Inch"
+#: tfrmprintemulatorsettings.label3.caption
+msgid "Width (inches)"
 msgstr ""
 
-#: tformsettings.label4.caption
-msgid "Höhe Inch"
+#: tfrmprintemulatorsettings.label4.caption
+msgid "Height (inches)"
 msgstr ""
 
-#: tformsettings.label5.caption
+#: tfrmprintemulatorsettings.label5.caption
+msgctxt "tfrmprintemulatorsettings.label5.caption"
 msgid "TCP Port"
 msgstr ""
 
-#: tformsettings.label6.caption
-msgid "Bind Adresse"
+#: tfrmprintemulatorsettings.label6.caption
+msgid "Bind Address"
 msgstr ""
 
-#: tformsettings.label7.caption
-msgid "ZPL Viewer 0.5"
+#: tfrmprintemulatorsettings.label7.caption
+msgid "Print emulator - Label Preview (ZPL) v0.1"
 msgstr ""
 
-#: tformsettings.rgengine.caption
+#: tfrmprintemulatorsettings.rgengine.caption
+msgctxt "tfrmprintemulatorsettings.rgengine.caption"
 msgid "Render Engine"
 msgstr ""
 

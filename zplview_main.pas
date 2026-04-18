@@ -17,9 +17,9 @@ uses
 
 type
 
-  { TForm1 }
+  { TFrmPrintEmulator }
 
-  TForm1 = class(TForm)
+  TFrmPrintEmulator = class(TForm)
     BRenderManual: TButton;
     Image1: TImage;
     MainMenu1: TMainMenu;
@@ -49,7 +49,6 @@ type
     FZplData: TMemoryStream;
     { Ruler drag state }
     FDragDir: integer;
-    FDragData: integer;
     FRulers: array of integer;
     FRulerTypes: array of integer; // 0 = vertical, 1 = horizontal
     FRulersVisible: boolean;
@@ -82,15 +81,15 @@ type
   end;
 
 var
-  Form1: TForm1;
+  FrmPrintEmulator: TFrmPrintEmulator;
 
 implementation
 
 {$R *.lfm}
 
-{ TForm1 }
+{ TFrmPrintEmulator }
 
-function TForm1.GetLANIP: string;
+function TFrmPrintEmulator.GetLANIP: string;
 var
   Socket: TInetSocket;
 begin
@@ -103,7 +102,7 @@ begin
   end;
 end;
 
-function TForm1.IniFilePath: string;
+function TFrmPrintEmulator.IniFilePath: string;
 var
   BaseName, EnvDir: string;
 begin
@@ -120,7 +119,7 @@ begin
   Result := BaseName;
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TFrmPrintEmulator.FormCreate(Sender: TObject);
 begin
   FZplData := TMemoryStream.Create;
   FJobCount := 0;
@@ -144,12 +143,12 @@ begin
   Self.Position := poScreenCenter;
 end;
 
-procedure TForm1.AcceptTimerTimer(Sender: TObject);
+procedure TFrmPrintEmulator.AcceptTimerTimer(Sender: TObject);
 begin
   FTcpServer.Poll;
 end;
 
-procedure TForm1.BRenderManualClick(Sender: TObject);
+procedure TFrmPrintEmulator.BRenderManualClick(Sender: TObject);
 var
   ZplText: string;
 begin
@@ -166,19 +165,19 @@ begin
   end;
 end;
 
-procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+procedure TFrmPrintEmulator.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   FreeAndNil(FTcpServer);
   FreeAndNil(FZplData);
 end;
 
-procedure TForm1.MenuItem2Click(Sender: TObject);
+procedure TFrmPrintEmulator.MenuItem2Click(Sender: TObject);
 begin
-  FormSettings.PutSettings(FSettings);
+  FrmPrintEmulatorSettings.PutSettings(FSettings);
 
-  if FormSettings.ShowModal = mrOk then
+  if FrmPrintEmulatorSettings.ShowModal = mrOk then
   begin
-    FormSettings.GetSettings(FSettings);
+    FrmPrintEmulatorSettings.GetSettings(FSettings);
 
     StatusBar1.Panels[1].Text := IntToStr(FSettings.rotation);
 
@@ -195,17 +194,17 @@ begin
   end;
 end;
 
-procedure TForm1.MenuItem3Click(Sender: TObject);
+procedure TFrmPrintEmulator.MenuItem3Click(Sender: TObject);
 begin
   Close;
 end;
 
-procedure TForm1.MSourceCodeChange(Sender: TObject);
+procedure TFrmPrintEmulator.MSourceCodeChange(Sender: TObject);
 begin
   TBLock.Checked := (MSourceCode.Lines.Count > 3);
 end;
 
-procedure TForm1.Panel2Click(Sender: TObject);
+procedure TFrmPrintEmulator.Panel2Click(Sender: TObject);
 var
   NewWidth: Integer;
 begin
@@ -225,7 +224,7 @@ begin
   end;
 end;
 
-procedure TForm1.StatusBar1Click(Sender: TObject);
+procedure TFrmPrintEmulator.StatusBar1Click(Sender: TObject);
 begin
   FSettings.rotation := FSettings.rotation + 90;
   if FSettings.rotation > 270 then
@@ -237,7 +236,7 @@ begin
     FetchAndDisplayLabel;
 end;
 
-procedure TForm1.RePrint;
+procedure TFrmPrintEmulator.RePrint;
 var
   PrinterIndex, BytesWritten: integer;
 begin
@@ -284,7 +283,7 @@ begin
   end;
 end;
 
-procedure TForm1.FetchAndDisplayLabel;
+procedure TFrmPrintEmulator.FetchAndDisplayLabel;
 var
   ImageData: TMemoryStream;
 begin
@@ -320,7 +319,7 @@ begin
   end;
 end;
 
-procedure TForm1.HandleZplDataReceived(const ZplData: TMemoryStream);
+procedure TFrmPrintEmulator.HandleZplDataReceived(const ZplData: TMemoryStream);
 var
   ZplText: string;
 begin
@@ -346,7 +345,7 @@ begin
   FetchAndDisplayLabel;
 end;
 
-procedure TForm1.RecreateServer;
+procedure TFrmPrintEmulator.RecreateServer;
 begin
   if Assigned(FTcpServer) then
     FreeAndNil(FTcpServer);
@@ -355,7 +354,7 @@ begin
   FTcpServer.OnDataReceived := @HandleZplDataReceived;
 end;
 
-procedure TForm1.LoadSettings;
+procedure TFrmPrintEmulator.LoadSettings;
 var
   INI: TINIFile;
 begin
@@ -380,7 +379,7 @@ begin
   end;
 end;
 
-procedure TForm1.SaveSettings;
+procedure TFrmPrintEmulator.SaveSettings;
 var
   INI: TINIFile;
 begin
@@ -405,7 +404,7 @@ begin
   end;
 end;
 
-procedure TForm1.ResetSettings;
+procedure TFrmPrintEmulator.ResetSettings;
 begin
   FSettings.resolution := 203;
   FSettings.rotation := 0;

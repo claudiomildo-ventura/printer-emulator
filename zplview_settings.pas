@@ -25,9 +25,9 @@ type
     saverawdata: boolean;
   end;
 
-  { TFormSettings }
+  { TFrmPrintEmulatorSettings }
 
-  TFormSettings = class(TForm)
+  TFrmPrintEmulatorSettings = class(TForm)
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
     Button1: TButton;
@@ -61,20 +61,20 @@ type
   end;
 
 var
-  FormSettings: TFormSettings;
+  FrmPrintEmulatorSettings: TFrmPrintEmulatorSettings;
 
 implementation
 
 {$R *.lfm}
 
-{ TFormSettings }
+{ TFrmPrintEmulatorSettings }
 
-procedure TFormSettings.FormShow(Sender: TObject);
+procedure TFrmPrintEmulatorSettings.FormShow(Sender: TObject);
 begin
   ComPrinter.Items.Assign(Printer.Printers);
 end;
 
-procedure TFormSettings.PutSettings(var setup: ZViewSettings);
+procedure TFrmPrintEmulatorSettings.PutSettings(var setup: ZViewSettings);
 var
   idx: Integer;
 begin
@@ -106,7 +106,7 @@ begin
   EdtBind.Text := setup.bindadr;
 end;
 
-procedure TFormSettings.GetSettings(var setup: ZViewSettings);
+procedure TFrmPrintEmulatorSettings.GetSettings(var setup: ZViewSettings);
 begin
   setup.resolution := StrToIntDef(ComRes.Text, 0);
   setup.rotation := StrToIntDef(ComRotate.Text, 0);

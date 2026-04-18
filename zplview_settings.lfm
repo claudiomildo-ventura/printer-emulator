@@ -1,4 +1,4 @@
-object FormSettings: TFormSettings
+object FrmPrintEmulatorSettings: TFrmPrintEmulatorSettings
   Left = 410
   Height = 376
   Top = 171
@@ -39,7 +39,6 @@ object FormSettings: TFormSettings
     Top = 96
     Width = 100
     TabOrder = 2
-    Text = ''
   end
   object EdtHeight: TEdit
     Left = 144
@@ -47,7 +46,6 @@ object FormSettings: TFormSettings
     Top = 136
     Width = 100
     TabOrder = 3
-    Text = ''
   end
   object ComRotate: TComboBox
     Left = 144
@@ -68,28 +66,28 @@ object FormSettings: TFormSettings
     Left = 16
     Height = 15
     Top = 16
-    Width = 110
+    Width = 85
     Caption = 'Resolution (DPI)'
   end
   object Label2: TLabel
     Left = 16
     Height = 15
     Top = 56
-    Width = 60
+    Width = 45
     Caption = 'Rotation'
   end
   object Label3: TLabel
     Left = 16
     Height = 15
     Top = 96
-    Width = 100
+    Width = 77
     Caption = 'Width (inches)'
   end
   object Label4: TLabel
     Left = 16
     Height = 15
     Top = 136
-    Width = 100
+    Width = 81
     Caption = 'Height (inches)'
   end
   object ComRes: TComboBox
@@ -111,7 +109,7 @@ object FormSettings: TFormSettings
     Left = 328
     Height = 19
     Top = 16
-    Width = 140
+    Width = 83
     Caption = 'Save as PNG'
     TabOrder = 6
   end
@@ -122,13 +120,12 @@ object FormSettings: TFormSettings
     Width = 341
     Anchors = [akTop, akLeft, akRight]
     TabOrder = 7
-    Text = ''
   end
   object ChbPrint: TCheckBox
     Left = 328
     Height = 19
     Top = 72
-    Width = 70
+    Width = 43
     Caption = 'Print'
     TabOrder = 8
   end
@@ -136,7 +133,7 @@ object FormSettings: TFormSettings
     Left = 440
     Height = 19
     Top = 72
-    Width = 120
+    Width = 92
     Caption = 'Send raw data'
     TabOrder = 9
   end
@@ -154,7 +151,7 @@ object FormSettings: TFormSettings
     Left = 328
     Height = 19
     Top = 120
-    Width = 140
+    Width = 90
     Caption = 'Execute script'
     Enabled = False
     TabOrder = 11
@@ -167,7 +164,6 @@ object FormSettings: TFormSettings
     Anchors = [akTop, akLeft, akRight]
     Enabled = False
     TabOrder = 12
-    Text = ''
   end
   object Button1: TButton
     Left = 640
@@ -190,7 +186,7 @@ object FormSettings: TFormSettings
     Left = 17
     Height = 15
     Top = 176
-    Width = 70
+    Width = 46
     Caption = 'TCP Port'
   end
   object EdtBind: TEdit
@@ -205,7 +201,7 @@ object FormSettings: TFormSettings
     Left = 17
     Height = 15
     Top = 216
-    Width = 100
+    Width = 69
     Caption = 'Bind Address'
   end
   object ChbSaveRaw: TCheckBox
@@ -213,7 +209,7 @@ object FormSettings: TFormSettings
     Height = 19
     Hint = 'Save raw ZPL to current directory'
     Top = 168
-    Width = 160
+    Width = 87
     Caption = 'Save raw ZPL'
     ParentShowHint = False
     ShowHint = True
@@ -258,7 +254,7 @@ object FormSettings: TFormSettings
     Left = 264
     Height = 15
     Top = 352
-    Width = 110
+    Width = 214
     Caption = 'Print emulator - Label Preview (ZPL) v0.1'
   end
 end
