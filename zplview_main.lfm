@@ -1,19 +1,19 @@
 object FrmPrintEmulator: TFrmPrintEmulator
   Left = 353
-  Height = 675
+  Height = 800
   Top = 212
   Width = 772
   BorderWidth = 5
   Caption = 'Print emulator - Label Preview (ZPL)'
-  ClientHeight = 675
+  ClientHeight = 800
   ClientWidth = 772
   Menu = MainMenu1
-  LCLVersion = '4.4.0.0'
+  LCLVersion = '4.6.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   object Image1: TImage
     Left = 5
-    Height = 642
+    Height = 767
     Top = 5
     Width = 612
     Align = alClient
@@ -24,7 +24,7 @@ object FrmPrintEmulator: TFrmPrintEmulator
   object StatusBar1: TStatusBar
     Left = 5
     Height = 23
-    Top = 647
+    Top = 772
     Width = 762
     Panels = <    
       item
@@ -52,16 +52,16 @@ object FrmPrintEmulator: TFrmPrintEmulator
   end
   object Panel1: TPanel
     Left = 617
-    Height = 642
+    Height = 767
     Top = 5
     Width = 150
     Align = alRight
-    ClientHeight = 642
+    ClientHeight = 767
     ClientWidth = 150
     TabOrder = 1
     object MSourceCode: TMemo
       Left = 16
-      Height = 640
+      Height = 765
       Top = 1
       Width = 133
       Align = alClient
@@ -71,7 +71,7 @@ object FrmPrintEmulator: TFrmPrintEmulator
     object BRenderManual: TButton
       Left = 97
       Height = 25
-      Top = 615
+      Top = 740
       Width = 51
       Anchors = [akRight, akBottom]
       Caption = 'Render'
@@ -80,7 +80,7 @@ object FrmPrintEmulator: TFrmPrintEmulator
     end
     object Panel2: TPanel
       Left = 1
-      Height = 640
+      Height = 765
       Top = 1
       Width = 15
       Align = alLeft
@@ -91,7 +91,7 @@ object FrmPrintEmulator: TFrmPrintEmulator
       Left = 48
       Height = 25
       Hint = 'Prevent your ZPL code from being overwritten'
-      Top = 615
+      Top = 740
       Width = 48
       Anchors = [akRight, akBottom]
       Caption = 'Locked'

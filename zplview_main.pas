@@ -12,10 +12,21 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
   StdCtrls, ComCtrls, Sockets, ssockets, zplview_settings, zplnet,
-  zplprocessor, zplstorage, dateutils, INIFiles, Printers, lazlogger,
-  DefaultTranslator;
+  zplprocessor, zplstorage, zplrenderthread, zplcache, dateutils, INIFiles,
+  Printers, lazlogger, DefaultTranslator;
 
 type
+  { TJobHistoryItem — stores one received/rendered job }
+  TJobHistoryItem = class
+  public
+    ZplData: TMemoryStream;
+    ImageData: TMemoryStream;
+    Timestamp: TDateTime;
+    JobNumber: integer;
+    constructor Create(AJobNumber: integer; const AZplData: TMemoryStream;
+      const AImageData: TMemoryStream);
+    destructor Destroy; override;
+  end;
 
   { TFrmPrintEmulator }
 
@@ -56,12 +67,23 @@ type
     FSettings: ZViewSettings;
     FJobCount: integer;
     FIniFilePath: string;
+    { Render cache }
+    FCache: TZplCache;
+    { Job history }
+    FJobHistory: TList;
+    FHistoryPanel: TPanel;
+    FHistoryList: TListBox;
+    FRendering: boolean;
 
     { Called by FTcpServer when a complete ZPL job arrives over TCP }
     procedure HandleZplDataReceived(const ZplData: TMemoryStream);
 
     { Submits FZplData to the Labelary API and updates the display }
     procedure FetchAndDisplayLabel;
+
+    { Callback from background render thread }
+    procedure HandleRenderComplete(const ImageData: TMemoryStream;
+      const ErrorMsg: string);
 
     { Print FZplData / current image on the configured printer }
     procedure RePrint;
@@ -76,6 +98,12 @@ type
 
     { Rebuild the TCP server using current FSettings (port / bind address) }
     procedure RecreateServer;
+
+    { Job history management }
+    procedure AddJobToHistory(const ImageData: TMemoryStream);
+    procedure HistoryListClick(Sender: TObject);
+    procedure ClearJobHistory;
+    procedure CreateHistoryUI;
   public
 
   end;
@@ -123,10 +151,15 @@ procedure TFrmPrintEmulator.FormCreate(Sender: TObject);
 begin
   FZplData := TMemoryStream.Create;
   FJobCount := 0;
+  FRendering := False;
+  FCache := TZplCache.Create;
+  FJobHistory := TList.Create;
 
   FIniFilePath := IniFilePath;
   ResetSettings;
   LoadSettings;
+
+  CreateHistoryUI;
 
   if StatusBar1.Panels.Count > 3 then
     StatusBar1.Panels[3].Text := GetLANIP + ':' + IntToStr(FSettings.tcpport);
@@ -169,6 +202,9 @@ procedure TFrmPrintEmulator.FormClose(Sender: TObject; var CloseAction: TCloseAc
 begin
   FreeAndNil(FTcpServer);
   FreeAndNil(FZplData);
+  FreeAndNil(FCache);
+  ClearJobHistory;
+  FreeAndNil(FJobHistory);
 end;
 
 procedure TFrmPrintEmulator.MenuItem2Click(Sender: TObject);
@@ -286,27 +322,34 @@ end;
 procedure TFrmPrintEmulator.FetchAndDisplayLabel;
 var
   ImageData: TMemoryStream;
+  CacheKey: string;
+  ValidationError: string;
+  RenderThread: TZplRenderThread;
 begin
-  Image1.Picture.Clear;
-  Image1.Invalidate;
-  Application.ProcessMessages;
+  if FRendering then Exit;
 
+  { Validate ZPL content before sending to API }
+  ValidationError := ValidateZpl(FZplData);
+  if ValidationError <> '' then
+  begin
+    StatusBar1.Panels[2].Text := 'Invalid ZPL';
+    DebugLn('ZPL validation failed: ' + ValidationError);
+    Exit;
+  end;
+
+  { Check cache first }
+  CacheKey := TZplCache.MakeCacheKey(FZplData, FSettings);
   ImageData := TMemoryStream.Create;
-  try
-    try
-      FetchLabelImage(FZplData, FSettings, ImageData);
-    except
-      on E: Exception do
-      begin
-        MessageDlg('Render error', E.Message, mtError, [mbOK], 0);
-        Exit;
-      end;
-    end;
 
+  if FCache.TryGet(CacheKey, ImageData) then
+  begin
     Image1.Picture.LoadFromStream(ImageData);
 
     Inc(FJobCount);
-    StatusBar1.Panels[0].Text := Format('#%d - %s', [FJobCount, DateTimeToStr(Now)]);
+    StatusBar1.Panels[0].Text := Format('#%d - %s (cached)', [FJobCount, DateTimeToStr(Now)]);
+    StatusBar1.Panels[2].Text := '';
+
+    AddJobToHistory(ImageData);
 
     if FSettings.save then
       SaveLabelImage(Image1.Picture, FSettings.savepath);
@@ -314,9 +357,56 @@ begin
     if FSettings.print then
       RePrint;
 
-  finally
     ImageData.Free;
+    Exit;
   end;
+
+  ImageData.Free;
+
+  { Render in background thread }
+  FRendering := True;
+  StatusBar1.Panels[2].Text := 'Rendering...';
+  Image1.Picture.Clear;
+  Image1.Invalidate;
+
+  RenderThread := TZplRenderThread.Create(FZplData, FSettings);
+  RenderThread.OnRenderComplete := @HandleRenderComplete;
+  RenderThread.Start;
+end;
+
+procedure TFrmPrintEmulator.HandleRenderComplete(const ImageData: TMemoryStream;
+  const ErrorMsg: string);
+var
+  CacheKey: string;
+begin
+  FRendering := False;
+
+  if ErrorMsg <> '' then
+  begin
+    StatusBar1.Panels[2].Text := 'Error';
+    MessageDlg('Render error', ErrorMsg, mtError, [mbOK], 0);
+    Exit;
+  end;
+
+  StatusBar1.Panels[2].Text := '';
+  ImageData.Position := 0;
+  Image1.Picture.LoadFromStream(ImageData);
+
+  Inc(FJobCount);
+  StatusBar1.Panels[0].Text := Format('#%d - %s', [FJobCount, DateTimeToStr(Now)]);
+
+  { Store in cache }
+  CacheKey := TZplCache.MakeCacheKey(FZplData, FSettings);
+  FCache.Put(CacheKey, ImageData);
+
+  { Store in job history }
+  AddJobToHistory(ImageData);
+
+  if FSettings.save then
+    SaveLabelImage(Image1.Picture, FSettings.savepath);
+
+  if FSettings.print then
+    RePrint;
 end;
 
 procedure TFrmPrintEmulator.HandleZplDataReceived(const ZplData: TMemoryStream);
@@ -420,6 +510,113 @@ begin
   FSettings.scriptpath := '';
   FSettings.tcpport := 9100;
   FSettings.bindadr := '0.0.0.0';
+end;
+
+{ --- Job History --- }
+
+constructor TJobHistoryItem.Create(AJobNumber: integer;
+  const AZplData: TMemoryStream; const AImageData: TMemoryStream);
+begin
+  inherited Create;
+  JobNumber := AJobNumber;
+  Timestamp := Now;
+  ZplData := TMemoryStream.Create;
+  ImageData := TMemoryStream.Create;
+
+  if Assigned(AZplData) then
+  begin
+    AZplData.Position := 0;
+    ZplData.CopyFrom(AZplData, AZplData.Size);
+    ZplData.Position := 0;
+  end;
+
+  if Assigned(AImageData) then
+  begin
+    AImageData.Position := 0;
+    ImageData.CopyFrom(AImageData, AImageData.Size);
+    ImageData.Position := 0;
+  end;
+end;
+
+destructor TJobHistoryItem.Destroy;
+begin
+  FreeAndNil(ZplData);
+  FreeAndNil(ImageData);
+  inherited Destroy;
+end;
+
+procedure TFrmPrintEmulator.CreateHistoryUI;
+begin
+  FHistoryPanel := TPanel.Create(Self);
+  FHistoryPanel.Parent := Self;
+  FHistoryPanel.Align := alBottom;
+  FHistoryPanel.Height := 120;
+  FHistoryPanel.Caption := '';
+  FHistoryPanel.BevelOuter := bvNone;
+
+  FHistoryList := TListBox.Create(Self);
+  FHistoryList.Parent := FHistoryPanel;
+  FHistoryList.Align := alClient;
+  FHistoryList.OnClick := @HistoryListClick;
+end;
+
+procedure TFrmPrintEmulator.AddJobToHistory(const ImageData: TMemoryStream);
+var
+  Item: TJobHistoryItem;
+  DisplayText: string;
+begin
+  Item := TJobHistoryItem.Create(FJobCount, FZplData, ImageData);
+  FJobHistory.Add(Item);
+
+  { Keep history bounded to 100 entries }
+  while FJobHistory.Count > 100 do
+  begin
+    TJobHistoryItem(FJobHistory[0]).Free;
+    FJobHistory.Delete(0);
+    FHistoryList.Items.Delete(0);
+  end;
+
+  DisplayText := Format('#%d  %s', [Item.JobNumber, FormatDateTime('hh:nn:ss', Item.Timestamp)]);
+  FHistoryList.Items.Add(DisplayText);
+  FHistoryList.ItemIndex := FHistoryList.Items.Count - 1;
+end;
+
+procedure TFrmPrintEmulator.HistoryListClick(Sender: TObject);
+var
+  Idx: integer;
+  Item: TJobHistoryItem;
+  ZplText: string;
+begin
+  Idx := FHistoryList.ItemIndex;
+  if (Idx < 0) or (Idx >= FJobHistory.Count) then Exit;
+
+  Item := TJobHistoryItem(FJobHistory[Idx]);
+
+  { Display the stored image }
+  Item.ImageData.Position := 0;
+  Image1.Picture.LoadFromStream(Item.ImageData);
+
+  { Show ZPL source in the memo (unless locked) }
+  if not TBLock.Checked then
+  begin
+    if Item.ZplData.Size > 0 then
+    begin
+      SetString(ZplText, PAnsiChar(Item.ZplData.Memory), Item.ZplData.Size);
+      MSourceCode.Text := ZplText;
+    end;
+  end;
+
+  StatusBar1.Panels[0].Text := Format('#%d - %s',
+    [Item.JobNumber, DateTimeToStr(Item.Timestamp)]);
+end;
+
+procedure TFrmPrintEmulator.ClearJobHistory;
+var
+  I: integer;
+begin
+  for I := 0 to FJobHistory.Count - 1 do
+    TJobHistoryItem(FJobHistory[I]).Free;
+  FJobHistory.Clear;
 end;
 
 end.

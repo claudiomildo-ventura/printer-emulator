@@ -40,6 +40,10 @@ procedure FetchLabelImage(const ZplData: TMemoryStream;
   http://api.labelary.com/v1/printers/8dpmm/labels/4.00x6.00/0/ }
 function BuildLabelaryUrl(const Settings: ZViewSettings): string;
 
+{ Validates that ZplData contains well-formed ZPL content.
+  Returns an empty string on success, or a human-readable error message. }
+function ValidateZpl(const ZplData: TMemoryStream): string;
+
 implementation
 
 { Maps a DPI integer to the Labelary printer identifier string. }
@@ -114,6 +118,36 @@ begin
     ImageData.Position := 0;
   finally
     FreeAndNil(HttpClient);
+  end;
+end;
+
+function ValidateZpl(const ZplData: TMemoryStream): string;
+var
+  ZplText: string;
+begin
+  Result := '';
+
+  if ZplData.Size = 0 then
+  begin
+    Result := 'ZPL data is empty.';
+    Exit;
+  end;
+
+  SetLength(ZplText, ZplData.Size);
+  ZplData.Position := 0;
+  ZplData.Read(ZplText[1], ZplData.Size);
+  ZplData.Position := 0;
+
+  if Pos('^XA', UpperCase(ZplText)) = 0 then
+  begin
+    Result := 'ZPL data missing ^XA (format start command).';
+    Exit;
+  end;
+
+  if Pos('^XZ', UpperCase(ZplText)) = 0 then
+  begin
+    Result := 'ZPL data missing ^XZ (format end command).';
+    Exit;
   end;
 end;
 

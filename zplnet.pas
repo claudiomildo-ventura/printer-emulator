@@ -19,7 +19,7 @@ unit zplnet;
 interface
 
 uses
-  Classes, SysUtils, ssockets, lazlogger;
+  Classes, SysUtils, ssockets, lazlogger, DateUtils;
 
 const
   { Maximum accepted ZPL payload in bytes. Jobs larger than this are truncated
@@ -41,11 +41,14 @@ type
   private
     FServer: TINetServer;
     FOnDataReceived: TZplDataReceivedEvent;
+    FLastConnectionTime: TDateTime;
+    FMinIntervalMs: integer;
     procedure HandleConnection(Sender: TObject; DataStream: TSocketStream);
     procedure HandleIdle(Sender: TObject);
     function GetPort: integer;
   public
-    constructor Create(const BindAddress: string; Port: integer);
+    constructor Create(const BindAddress: string; Port: integer;
+      MinIntervalMs: integer = 500);
     destructor Destroy; override;
 
     { Call from a TTimer.OnTimer handler to process pending connections. }
@@ -60,9 +63,12 @@ type
 
 implementation
 
-constructor TZplTcpServer.Create(const BindAddress: string; Port: integer);
+constructor TZplTcpServer.Create(const BindAddress: string; Port: integer;
+  MinIntervalMs: integer);
 begin
   inherited Create;
+  FMinIntervalMs := MinIntervalMs;
+  FLastConnectionTime := 0;
   FServer := TINetServer.Create(BindAddress, Port);
   FServer.ReuseAddress := True;
   FServer.MaxConnections := 1;
@@ -100,7 +106,17 @@ var
   Buffer: array[0..ReadChunkSize - 1] of byte;
   BytesRead: integer;
   BytesAccepted: int64;
+  ElapsedMs: int64;
 begin
+  ElapsedMs := MilliSecondsBetween(Now, FLastConnectionTime);
+  if (FLastConnectionTime > 0) and (ElapsedMs < FMinIntervalMs) then
+  begin
+    DebugLn('ZplTcpServer: rate limited — rejected connection (%d ms since last)',
+            [ElapsedMs]);
+    DataStream.Free;
+    Exit;
+  end;
+  FLastConnectionTime := Now;
   ZplData := TMemoryStream.Create;
   try
     BytesAccepted := 0;
