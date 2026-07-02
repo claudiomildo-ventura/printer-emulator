@@ -1,0 +1,135 @@
+# Executables / libraries
+*.exe
+*.dll
+*.so
+*.dylib
+*.bpl
+*.bpi
+*.dcp
+*.apk
+
+# Compiled units / objects
+*.dcu
+*.ppu
+*.o
+*.or
+*.a
+*.lib
+
+# Debug / map / temp compiler files
+*.dbg
+*.map
+*.tds
+*.drc
+*.rsm
+
+###############################################################################
+# DELPHI
+###############################################################################
+
+# Auto-generated / intermediate
+*.cfg
+*.hpp
+*.dres
+*Resource.rc
+
+# IDE user-specific
+*.local
+*.identcache
+*.projdata
+*.tvsconfig
+*.dsk
+
+# History / recovery
+__history/
+__recovery/
+*.~*
+
+# Optional (uncomment if needed)
+
+# *.res
+# *.deployproj
+# *.vlb
+# *.ddp
+# *.tlb
+# *.obj
+
+###############################################################################
+# LAZARUS / FREE PASCAL
+###############################################################################
+
+# Generated files
+*.compiled
+*.lrs
+*.res
+*.rst
+*.rsj
+*.lrt
+
+# Session files (user-specific)
+*.lps
+
+# Backup / build folders
+backup/
+lib/
+*.bak
+
+###############################################################################
+# VISUAL STUDIO CODE
+###############################################################################
+
+# Ignore all VS Code settings (safe default)
+.vscode/
+*.code-workspace
+
+# --- OR use this instead if you want to share settings ---
+# .vscode/*
+# !.vscode/settings.json
+# !.vscode/extensions.json
+# !.vscode/launch.json
+
+###############################################################################
+# PROJECT OUTPUT DIRECTORIES
+###############################################################################
+
+bin/
+Bin/
+Debug/
+Release/
+
+Win32/
+Win64/
+Linux64/
+macOS/
+
+###############################################################################
+# DEPENDENCIES / PACKAGE MANAGERS
+###############################################################################
+
+# Boss (Delphi package manager)
+modules/
+
+###############################################################################
+# SYSTEM / GENERAL FILES
+###############################################################################
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Logs / temp
+*.log
+*.tmp
+*.temp
+
+###############################################################################
+# OPTIONAL (ENABLE IF NEEDED)
+###############################################################################
+
+# macOS app bundles
+# *.app/
+# Castalia stats
+# *.stat
