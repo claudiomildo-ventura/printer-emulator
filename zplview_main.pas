@@ -74,6 +74,9 @@ type
     FHistoryPanel: TPanel;
     FHistoryList: TListBox;
     FRendering: boolean;
+    FRenderPending: boolean;
+    FRenderSource: TMemoryStream;
+    FRenderCacheKey: string;
 
     { Called by FTcpServer when a complete ZPL job arrives over TCP }
     procedure HandleZplDataReceived(const ZplData: TMemoryStream);
@@ -85,8 +88,8 @@ type
     procedure HandleRenderComplete(const ImageData: TMemoryStream;
       const ErrorMsg: string);
 
-    { Print FZplData / current image on the configured printer }
-    procedure RePrint;
+    { Print the supplied ZPL stream / current image on the configured printer }
+    procedure RePrint(const ZplData: TMemoryStream);
 
     { Settings persistence }
     procedure LoadSettings;
@@ -100,7 +103,8 @@ type
     procedure RecreateServer;
 
     { Job history management }
-    procedure AddJobToHistory(const ImageData: TMemoryStream);
+    procedure AddJobToHistory(const ZplData: TMemoryStream;
+      const ImageData: TMemoryStream);
     procedure HistoryListClick(Sender: TObject);
     procedure ClearJobHistory;
     procedure CreateHistoryUI;
@@ -152,6 +156,9 @@ begin
   FZplData := TMemoryStream.Create;
   FJobCount := 0;
   FRendering := False;
+  FRenderPending := False;
+  FRenderSource := nil;
+  FRenderCacheKey := '';
   FCache := TZplCache.Create;
   FJobHistory := TList.Create;
 
@@ -200,8 +207,17 @@ end;
 
 procedure TFrmPrintEmulator.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
+  if FRendering then
+  begin
+    CloseAction := caNone;
+    StatusBar1.Panels[2].Text := 'Close after render completes';
+    MessageDlg('Render in progress', 'Please wait until the current label finishes rendering before closing.', mtInformation, [mbOK], 0);
+    Exit;
+  end;
+
   FreeAndNil(FTcpServer);
   FreeAndNil(FZplData);
+  FreeAndNil(FRenderSource);
   FreeAndNil(FCache);
   ClearJobHistory;
   FreeAndNil(FJobHistory);
@@ -272,7 +288,7 @@ begin
     FetchAndDisplayLabel;
 end;
 
-procedure TFrmPrintEmulator.RePrint;
+procedure TFrmPrintEmulator.RePrint(const ZplData: TMemoryStream);
 var
   PrinterIndex, BytesWritten: integer;
 begin
@@ -284,7 +300,7 @@ begin
     Exit;
   end;
 
-  if FZplData.Size = 0 then
+  if ZplData.Size = 0 then
   begin
     MessageDlg('Nothing to print', 'There is no ZPL data to print.', mtWarning, [mbOK], 0);
     Exit;
@@ -307,7 +323,7 @@ begin
     Printer.BeginDoc;
 
     if FSettings.printraw then
-      Printer.Write(FZplData.Memory^, FZplData.Size, BytesWritten)
+      Printer.Write(ZplData.Memory^, ZplData.Size, BytesWritten)
     else
       Printer.Canvas.StretchDraw(
         Classes.Rect(0, 0,
@@ -326,7 +342,12 @@ var
   ValidationError: string;
   RenderThread: TZplRenderThread;
 begin
-  if FRendering then Exit;
+  if FRendering then
+  begin
+    FRenderPending := True;
+    StatusBar1.Panels[2].Text := 'Rendering queued...';
+    Exit;
+  end;
 
   { Validate ZPL content before sending to API }
   ValidationError := ValidateZpl(FZplData);
@@ -349,13 +370,13 @@ begin
     StatusBar1.Panels[0].Text := Format('#%d - %s (cached)', [FJobCount, DateTimeToStr(Now)]);
     StatusBar1.Panels[2].Text := '';
 
-    AddJobToHistory(ImageData);
+    AddJobToHistory(FZplData, ImageData);
 
     if FSettings.save then
       SaveLabelImage(Image1.Picture, FSettings.savepath);
 
     if FSettings.print then
-      RePrint;
+      RePrint(FZplData);
 
     ImageData.Free;
     Exit;
@@ -369,7 +390,14 @@ begin
   Image1.Picture.Clear;
   Image1.Invalidate;
 
-  RenderThread := TZplRenderThread.Create(FZplData, FSettings);
+  FreeAndNil(FRenderSource);
+  FRenderSource := TMemoryStream.Create;
+  FZplData.Position := 0;
+  FRenderSource.CopyFrom(FZplData, FZplData.Size);
+  FRenderSource.Position := 0;
+  FRenderCacheKey := CacheKey;
+
+  RenderThread := TZplRenderThread.Create(FRenderSource, FSettings);
   RenderThread.OnRenderComplete := @HandleRenderComplete;
   RenderThread.Start;
 end;
@@ -377,14 +405,20 @@ end;
 procedure TFrmPrintEmulator.HandleRenderComplete(const ImageData: TMemoryStream;
   const ErrorMsg: string);
 var
-  CacheKey: string;
+  HasPendingRender: boolean;
 begin
   FRendering := False;
+  HasPendingRender := FRenderPending;
+  FRenderPending := False;
 
   if ErrorMsg <> '' then
   begin
     StatusBar1.Panels[2].Text := 'Error';
     MessageDlg('Render error', ErrorMsg, mtError, [mbOK], 0);
+    FreeAndNil(FRenderSource);
+    FRenderCacheKey := '';
+    if HasPendingRender then
+      FetchAndDisplayLabel;
     Exit;
   end;
 
@@ -396,17 +430,22 @@ begin
   StatusBar1.Panels[0].Text := Format('#%d - %s', [FJobCount, DateTimeToStr(Now)]);
 
   { Store in cache }
-  CacheKey := TZplCache.MakeCacheKey(FZplData, FSettings);
-  FCache.Put(CacheKey, ImageData);
+  FCache.Put(FRenderCacheKey, ImageData);
 
   { Store in job history }
-  AddJobToHistory(ImageData);
+  AddJobToHistory(FRenderSource, ImageData);
 
   if FSettings.save then
     SaveLabelImage(Image1.Picture, FSettings.savepath);
 
   if FSettings.print then
-    RePrint;
+    RePrint(FRenderSource);
+
+  FreeAndNil(FRenderSource);
+  FRenderCacheKey := '';
+
+  if HasPendingRender then
+    FetchAndDisplayLabel;
 end;
 
 procedure TFrmPrintEmulator.HandleZplDataReceived(const ZplData: TMemoryStream);
@@ -464,6 +503,7 @@ begin
     FSettings.scriptpath := INI.ReadString('SETTINGS', 'scriptpath', '');
     FSettings.tcpport := INI.ReadInteger('SETTINGS', 'tcpport', 9100);
     FSettings.bindadr := INI.ReadString('SETTINGS', 'bindadr', '0.0.0.0');
+    NormalizeSettings(FSettings);
   finally
     INI.Free;
   end;
@@ -560,12 +600,13 @@ begin
   FHistoryList.OnClick := @HistoryListClick;
 end;
 
-procedure TFrmPrintEmulator.AddJobToHistory(const ImageData: TMemoryStream);
+procedure TFrmPrintEmulator.AddJobToHistory(const ZplData: TMemoryStream;
+  const ImageData: TMemoryStream);
 var
   Item: TJobHistoryItem;
   DisplayText: string;
 begin
-  Item := TJobHistoryItem.Create(FJobCount, FZplData, ImageData);
+  Item := TJobHistoryItem.Create(FJobCount, ZplData, ImageData);
   FJobHistory.Add(Item);
 
   { Keep history bounded to 100 entries }

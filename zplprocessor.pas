@@ -98,6 +98,8 @@ begin
   HttpClient := TFPHTTPClient.Create(nil);
   try
     HttpClient.AllowRedirect := True;
+    HttpClient.ConnectTimeout := 10000;
+    HttpClient.IOTimeout := 30000;
     HttpClient.AddHeader('X-Rotation', IntToStr(Settings.rotation));
 
     ZplData.Position := 0;

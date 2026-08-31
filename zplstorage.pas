@@ -14,9 +14,9 @@ unit zplstorage;
 interface
 
 uses
-  Classes, SysUtils, Graphics, dateutils;
+  Classes, SysUtils, Graphics;
 
-{ Saves Picture to <SavePath>/<unix-timestamp>.png.
+{ Saves Picture to <SavePath>/<timestamp>.png.
   If SavePath is empty, the file is placed in the current directory. }
 procedure SaveLabelImage(Picture: TPicture; const SavePath: string);
 
@@ -35,26 +35,35 @@ begin
     Result := IncludeTrailingPathDelimiter(SetDirSeparators(SavePath));
 end;
 
+procedure EnsureSaveDirExists(const SaveDir: string);
+begin
+  if (SaveDir <> '') and (not DirectoryExists(SaveDir)) then
+    ForceDirectories(SaveDir);
+end;
+
 procedure SaveLabelImage(Picture: TPicture; const SavePath: string);
 var
-  FileName: string;
+  SaveDir, FileName: string;
 begin
-  FileName := Format('%s%d.png', [NormalisedSaveDir(SavePath), DateTimeToUnix(Now)]);
+  SaveDir := NormalisedSaveDir(SavePath);
+  EnsureSaveDirExists(SaveDir);
+  FileName := Format('%s%s.png', [SaveDir, FormatDateTime('yyyymmdd_hhnnss_zzz', Now)]);
   Picture.SaveToFile(FileName);
 end;
 
 procedure SaveRawZplData(const ZplText: string; const SavePath: string);
 var
-  FileName: string;
-  OutputFile: TextFile;
+  SaveDir, FileName: string;
+  OutputStream: TStringStream;
 begin
-  FileName := NormalisedSaveDir(SavePath) + 'rawdata.txt';
-  AssignFile(OutputFile, FileName);
+  SaveDir := NormalisedSaveDir(SavePath);
+  EnsureSaveDirExists(SaveDir);
+  FileName := SaveDir + 'rawdata.txt';
+  OutputStream := TStringStream.Create(ZplText + LineEnding);
   try
-    Rewrite(OutputFile);
-    Writeln(OutputFile, ZplText);
+    OutputStream.SaveToFile(FileName);
   finally
-    CloseFile(OutputFile);
+    OutputStream.Free;
   end;
 end;
 
